@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SurveyGorilla.Models;
+using SurveyGorilla.Logic;
 
 namespace SurveyGorilla.Controllers
 {
@@ -14,10 +15,12 @@ namespace SurveyGorilla.Controllers
     public class SurveyController : Controller
     {
         private readonly SurveyContext _context;
+        private readonly SurveyLogic _logic;
 
         public SurveyController(SurveyContext context)
         {
             _context = context;
+            _logic = new SurveyLogic(_context);
         }
 
         // GET: api/Survey
@@ -83,17 +86,17 @@ namespace SurveyGorilla.Controllers
 
         // POST: api/Survey
         [HttpPost]
-        public async Task<IActionResult> PostSurveyEntity([FromBody] SurveyEntity surveyEntity)
+        public IActionResult PostSurveyEntity([FromBody] SurveyData data)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                _logic.CreateSurvey(HttpContext.Session, data);
+                return Ok();
+            }
+            else
             {
                 return BadRequest(ModelState);
             }
-
-            _context.Surveys.Add(surveyEntity);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSurveyEntity", new { id = surveyEntity.Id }, surveyEntity);
         }
 
         // DELETE: api/Survey/5

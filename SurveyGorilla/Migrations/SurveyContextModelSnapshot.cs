@@ -25,6 +25,8 @@ namespace SurveyGorilla.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("EmailAddress");
+
                     b.Property<string>("Info");
 
                     b.Property<string>("PasswordHash");
@@ -38,6 +40,8 @@ namespace SurveyGorilla.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EmailAddress");
 
                     b.Property<string>("Info");
 

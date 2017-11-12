@@ -11,6 +11,7 @@ namespace SurveyGorilla.Models
     {
         [Key]
         public int Id { get; set; }
+        public int EmailAddress { get; set; }
         [ForeignKey("Survey")]
         public int SurveyId { get; set; }
         public string Info { get; set; }

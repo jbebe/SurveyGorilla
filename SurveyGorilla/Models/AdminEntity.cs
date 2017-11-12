@@ -8,6 +8,7 @@ namespace SurveyGorilla.Models
     public class AdminEntity
     {
         public int Id { get; set; }
+        public string EmailAddress { get; set; }
         public string PasswordHash { get; set; }
         public string Info { get; set; }
 
