@@ -32,7 +32,7 @@ namespace SurveyGorilla
             {
                 // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromDays(1);
-                options.Cookie.HttpOnly = true;
+                options.Cookie.HttpOnly = false;
             });
 
             // Register the Swagger generator, defining one or more Swagger documents

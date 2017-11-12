@@ -30,5 +30,16 @@ namespace SurveyGorilla.Logic
             _context.SaveChanges();
         }
 
+        public IEnumerable<SurveyEntity> GetAllSurvey(ISession session)
+        {
+            var adminId = session.GetInt32(Session.adminId);
+            return _context.Surveys.Where(survey => survey.AdminId == adminId);
+        }
+
+        public SurveyEntity GetSurvey(ISession session, int id)
+        {
+            var adminId = session.GetInt32(Session.adminId);
+            return _context.Surveys.Single(s => s.AdminId == adminId && s.Id == id);
+        }
     }
 }

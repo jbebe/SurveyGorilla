@@ -27,26 +27,28 @@ namespace SurveyGorilla.Controllers
         [HttpGet]
         public IEnumerable<SurveyEntity> GetSurveys()
         {
-            return _context.Surveys;
+            return _logic.GetAllSurvey(HttpContext.Session);
         }
 
         // GET: api/Survey/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSurveyEntity([FromRoute] int id)
+        public IActionResult GetSurveyEntity([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                try
+                {
+                    return Ok(_logic.GetSurvey(HttpContext.Session, id));
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
             }
-
-            var surveyEntity = await _context.Surveys.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (surveyEntity == null)
+            else
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            return Ok(surveyEntity);
         }
 
         // PUT: api/Survey/5

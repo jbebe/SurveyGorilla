@@ -5,6 +5,7 @@
     <title></title>
     <script src="/lib/jQuery/dist/jquery.min.js"></script>
     <script src="/lib/sammy/lib/min/sammy-latest.min.js"></script>
+    <script src="/lib/js-cookie/dist/js.cookie-2.2.0.min.js"></script>
 </head>
 <body>
     <button onclick="LogoutAction.call(this, event);">Logout</button>
@@ -19,7 +20,7 @@
             </label>
             <input type="submit" value="Submit"/>
         </form>
-        <button onclick="ChangeView('register');">Register</button>
+        <button onclick="Context.redirect('#/register');">Register</button>
     </div>
     <div id="register-view" style="display:none;">
         <h3>Register:</h3>
@@ -32,7 +33,7 @@
             </label>
             <input type="submit" value="Submit" />
         </form>
-        <button onclick="ChangeView('login');">Login</button>
+        <button onclick="Context.redirect('#/login');">Login</button>
     </div>
     <div id="survey-create-view" style="display:none;">
         <h3>Survey Create:</h3>
@@ -42,11 +43,11 @@
             </label>
             <input type="submit" value="Submit" />
         </form>
-        <button onclick="ChangeView('survey-list');">Back to Survey List</button>
+        <button onclick="Context.redirect('#/survey-list');">Back to Survey List</button>
     </div>
     <div id="survey-list-view" style="display:none;">
         <h3>Survey list:</h3>
-        <button onclick="ChangeView('survey-create');">Create Survey</button>
+        <button onclick="Context.redirect('#/survey-create');">Create Survey</button>
         <ul data-load="LoadSurveyList"></ul>
     </div>
     <div id="survey-view" style="display:none;">
@@ -57,9 +58,29 @@
         <ul data-load="LoadSurveyQuestions"></ul>
         <b>Survey Clients:</b>
         <ul data-load="LoadSurveyClients"></ul>
-        <button onclick="ChangeView('survey-list');">Back to Survey List</button>
-        <button onclick="ChangeView('question-create');">Back to Survey List</button>
-        <button onclick="ChangeView('client-create');">Back to Survey List</button>
+        <button onclick="Context.redirect('#/survey-list');">Back to Survey List</button>
+        <button onclick="Context.redirect('#/question-create');">Create Questions</button>
+        <button onclick="Context.redirect('#/client-create');">Create Client</button>
+    </div>
+    <div id="question-create-view" style="display:none;">
+        <h3>Question Create:</h3>
+        <form onsubmit="CreateQuestionAction.call(this, event)">
+            <label>
+                Question: <input type="text" />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <button onclick="Context.redirect('#/survey-list');">Back to Survey List</button>
+    </div>
+    <div id="client-create-view" style="display:none;">
+        <h3>Client Create:</h3>
+        <form onsubmit="CreateClientAction.call(this, event)">
+            <label>
+                Name: <input type="text" />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <button onclick="Context.redirect('#/survey-list');">Back to Survey List</button>
     </div>
     <pre id="message-log"></pre>
     <script src="/js/index.js"></script>

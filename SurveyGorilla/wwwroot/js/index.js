@@ -1,10 +1,19 @@
 ﻿/// <reference path="../lib/jQuery/dist/jquery.js" />
 /// <reference path="../lib/sammy/lib/sammy.js" />
+/// <reference path="../lib/js-cookie/js.cookie.js" />
 
 let Context = null;
 let App = $.sammy(function () {
+    this.get('/', function () {
+        this.redirect('#/');
+    });
     this.get('#/', function () {
-        this.redirect('#/login');
+        let sessionCookie = Cookies.get('.AspNetCore.Session');
+        if (sessionCookie !== undefined) {
+            this.redirect('#/survey-list');
+        } else {
+            this.redirect('#/login');
+        }
     });
     this.get('#/login', function () {
         ChangeView('login');
@@ -22,7 +31,12 @@ let App = $.sammy(function () {
         let id = parseInt(this.params['id']);
         ChangeView('survey', id);
     });
-
+    this.get('#/question-create', function () {
+        ChangeView('question-create');
+    });
+    this.get('#/client-create', function () {
+        ChangeView('client-create');
+    });
     this.before('.*', function () {
         Context = this;
     });
@@ -34,7 +48,7 @@ function ChangeView(viewName, ...loadFnArgs) {
     const suffix = '-view';
     $(`div[id$="${suffix}"]`).each((index, element) => {
         let view = $(element);
-        if (view.prop('id') == viewName + suffix) {
+        if (view.prop('id') === viewName + suffix) {
             view.show();
             view.find('*[data-load]').each((index, element) => {
                 window[$(element).data('load')].call(element, ...loadFnArgs);
@@ -42,7 +56,7 @@ function ChangeView(viewName, ...loadFnArgs) {
         } else {
             view.hide();
         }
-    })
+    });
 }
 
 function Log(message) {
@@ -73,9 +87,9 @@ function LoginAction(evt) {
     let data = {
         Email: email,
         Password: password
-    }
+    };
     let onSuccess = () => {
-        Context.redirect('#/survey');
+        Context.redirect('#/survey-list');
     };
     $.ajax({
         url: '/login',
@@ -92,7 +106,7 @@ function LoginAction(evt) {
 function LogoutAction() {
     let onSuccess = () => {
         Context.redirect('#/login');
-    }
+    };
     $.ajax({
         url: '/logout',
         type: 'GET'
@@ -110,7 +124,7 @@ function RegisterAction(evt) {
     let data = {
         Email: email,
         Password: password
-    }
+    };
     let onSuccess = () => {
         Context.redirect('#/login');
     };
@@ -136,6 +150,7 @@ function LoadSurveyList() {
                     <button onclick="Context.redirect('#/survey/${survey.id}')">
                         ${info.name}(${survey.id}) -> ${info.created}
                     </button>
+                    <button onclick="DeleteSurveyAction.call(this, ${survey.id})">X</button>
                 </li>`
             );
         });
@@ -155,9 +170,9 @@ function CreateSurveyAction(evt) {
     let name = form.find('input[type=text]').val();
     let data = {
         Name: name
-    }
+    };
     let onSuccess = () => {
-        Context.redirect('#/survey');
+        Context.redirect('#/survey-list');
     };
     $.ajax({
         url: '/api/Survey',
@@ -169,6 +184,18 @@ function CreateSurveyAction(evt) {
         .fail(AjaxErrorHandler());
 
     return false;
+}
+
+function DeleteSurveyAction(surveyId) {
+    let onSuccess = () => {
+        App.refresh();
+    };
+    $.ajax({
+        url: `/api/Survey/${surveyId}`,
+        type: 'DELETE'
+        })
+        .done(AjaxSuccessHandler(onSuccess))
+        .fail(AjaxErrorHandler());
 }
 
 function LoadSurveyDetails(surveyId) {
@@ -183,6 +210,39 @@ function LoadSurveyDetails(surveyId) {
     };
     $.ajax({
         url: `/api/Survey/${surveyId}`,
+        type: 'GET'
+        })
+        .done(AjaxSuccessHandler(onSuccess))
+        .fail(AjaxErrorHandler());
+}
+
+function LoadSurveyQuestions(surveyId) {
+    let list = $(this);
+    list.empty();
+    let onSuccess = data => {
+        let questions = JSON.parse(data.info).questions;
+        questions.forEach(question => {
+            list.append(`<li>Title: ${question.title}</li>`);
+        });
+    };
+    $.ajax({
+        url: `/api/Survey/${surveyId}`,
+        type: 'GET'
+        })
+        .done(AjaxSuccessHandler(onSuccess))
+        .fail(AjaxErrorHandler());
+}
+
+function LoadSurveyClients(surveyId) {
+    let list = $(this);
+    list.empty();
+    let onSuccess = data => {
+        data.forEach(client => {
+            list.append(`<li>email: ${client.emailAddress}</li>`);
+        });
+    };
+    $.ajax({
+        url: `/api/Survey/${surveyId}/Client`,
         type: 'GET'
         })
         .done(AjaxSuccessHandler(onSuccess))
