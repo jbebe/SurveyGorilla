@@ -1,50 +1,9 @@
-﻿/// <reference path="../lib/jQuery/dist/jquery.js" />
-/// <reference path="../lib/sammy/lib/sammy.js" />
-/// <reference path="../lib/js-cookie/js.cookie.js" />
+﻿/// <reference path="../lib/jquery/dist/jquery.js" />
+/// <reference path="../lib/js-cookie/src/js.cookie.js" />
 
-let Context = null;
-let App = $.sammy(function () {
-    this.get('/', function () {
-        this.redirect('#/');
-    });
-    this.get('#/', function () {
-        let sessionCookie = Cookies.get('.AspNetCore.Session');
-        if (sessionCookie !== undefined) {
-            this.redirect('#/survey-list');
-        } else {
-            this.redirect('#/login');
-        }
-    });
-    this.get('#/login', function () {
-        ChangeView('login');
-    });
-    this.get('#/register', function () {
-        ChangeView('register');
-    });
-    this.get('#/survey-create', function () {
-        ChangeView('survey-create');
-    });
-    this.get('#/survey-list', function () {
-        ChangeView('survey-list');
-    });
-    this.get('#/survey/:id', function () {
-        let id = parseInt(this.params['id']);
-        ChangeView('survey', id);
-    });
-    this.get('#/question-create', function () {
-        ChangeView('question-create');
-    });
-    this.get('#/client-create', function () {
-        ChangeView('client-create');
-    });
-    this.before('.*', function () {
-        Context = this;
-    });
-});
+Cookies.get('.AspNetCore.Session') !== undefined ? LoadView('survey-list') : LoadView('login');
 
-App.run('#/');
-
-function ChangeView(viewName, ...loadFnArgs) {
+function LoadView(viewName, ...loadFnArgs) {
     const suffix = '-view';
     $(`div[id$="${suffix}"]`).each((index, element) => {
         let view = $(element);
@@ -72,9 +31,9 @@ function AjaxSuccessHandler(callback = () => { }) {
 }
 
 function AjaxErrorHandler(callback = () => { }) {
-    return (data, textStatus, jqXHR) => {
-        callback(data, textStatus, jqXHR);
-        Log(`${textStatus}, ${JSON.stringify(jqXHR)}, ${errorThrown}`);
+    return (jqXHR, textStatus, errorThrown) => {
+        callback(jqXHR, textStatus, errorThrown);
+        Log(`${JSON.stringify(jqXHR)}, ${textStatus}, ${errorThrown}`);
     };
 }
 
@@ -85,17 +44,17 @@ function LoginAction(evt) {
     let email = form.find('input[type=email]').val();
     let password = form.find('input[type=password]').val();
     let data = {
-        Email: email,
-        Password: password
+        email: email,
+        password: password
     };
     let onSuccess = () => {
-        Context.redirect('#/survey-list');
+        LoadView('survey-list');
     };
     $.ajax({
         url: '/login',
         type: "POST",
         data: JSON.stringify(data),
-        contentType: "application/json"
+        contentType: "application/json",
     })
         .done(AjaxSuccessHandler(onSuccess))
         .fail(AjaxErrorHandler());
@@ -105,7 +64,7 @@ function LoginAction(evt) {
 
 function LogoutAction() {
     let onSuccess = () => {
-        Context.redirect('#/login');
+        LoadView('login');
     };
     $.ajax({
         url: '/logout',
@@ -126,7 +85,7 @@ function RegisterAction(evt) {
         Password: password
     };
     let onSuccess = () => {
-        Context.redirect('#/login');
+        LoadView('login');
     };
     $.ajax({
         url: '/register',
@@ -147,7 +106,7 @@ function LoadSurveyList() {
             let info = JSON.parse(survey.info);
             list.append(
                 `<li>
-                    <button onclick="Context.redirect('#/survey/${survey.id}')">
+                    <button onclick="LoadView('survey', ${survey.id})">
                         ${info.name}(${survey.id}) -> ${info.created}
                     </button>
                     <button onclick="DeleteSurveyAction.call(this, ${survey.id})">X</button>
@@ -169,10 +128,12 @@ function CreateSurveyAction(evt) {
     let form = $(this);
     let name = form.find('input[type=text]').val();
     let data = {
-        Name: name
+        info: JSON.stringify({
+            name: name
+        })
     };
     let onSuccess = () => {
-        Context.redirect('#/survey-list');
+        LoadView('survey-list');
     };
     $.ajax({
         url: '/api/Survey',
@@ -247,4 +208,83 @@ function LoadSurveyClients(surveyId) {
         })
         .done(AjaxSuccessHandler(onSuccess))
         .fail(AjaxErrorHandler());
+}
+
+function CreateQuestionAction(evt) {
+    evt.preventDefault();
+
+    let form = $(this);
+    let question = form.find('input[type=text]:eq(0)').val();
+    let answer = form.find('input[type=text]:eq(1)').val();
+    let data = {
+        info: JSON.stringify({
+            questions: [{ question: question, answer: answer }]
+        })
+    };
+    let onSuccess = () => {
+        LoadView('survey-list');
+    };
+    $.ajax({
+        url: '/api/Survey',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+    })
+        .done(AjaxSuccessHandler(onSuccess))
+        .fail(AjaxErrorHandler());
+
+    return false;
+}
+
+function CreateQuestionAction(evt) {
+    evt.preventDefault();
+
+    let form = $(this);
+    let question = form.find('input[type=text]:eq(0)').val();
+    let answer = form.find('input[type=text]:eq(1)').val();
+    let data = {
+        info: JSON.stringify({
+            questions: [{ question: question, answer: answer }]
+        })
+    };
+    let onSuccess = () => {
+        LoadView('survey-list');
+    };
+    $.ajax({
+        url: '/api/Survey',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+    })
+        .done(AjaxSuccessHandler(onSuccess))
+        .fail(AjaxErrorHandler());
+
+    return false;
+}
+
+function CreateQuestionAction(evt) {
+    evt.preventDefault();
+
+    let form = $(this);
+    let name = form.find('input[type=text]:eq(0)').val();
+    let email = form.find('input[type=text]:eq(1)').val();
+    let data = {
+        email: email,
+        info: JSON.stringify({
+            name: name
+        })
+    };
+    let onSuccess = () => {
+        LoadView('survey-list');
+    };
+    $.ajax({
+        url: '/api/Survey',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+    })
+        .done(AjaxSuccessHandler(onSuccess))
+        .fail(AjaxErrorHandler());
+
+    return false;
 }

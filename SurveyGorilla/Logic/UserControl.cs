@@ -17,24 +17,20 @@ namespace SurveyGorilla.Logic
             _context = context;
         }
         
-        public void Register(RegisterData data)
+        public AdminEntity Register(AdminData data)
         {
-            var admin = new AdminEntity();
-            var adminInfo = new { registered = DateTime.UtcNow };
-            admin.EmailAddress = data.Email;
-            admin.Info = JsonConvert.SerializeObject(adminInfo);
-            admin.PasswordHash = Crypto.Sha256(data.Password);
-            _context.Add(admin);
-            _context.SaveChanges();
+            var adminLogic = new AdminLogic(_context);
+            return adminLogic.CreateAdmin(data);
         }
 
-        public void Login(ISession session, LoginData data)
+        public AdminEntity Login(ISession session, LoginData data)
         {
             var admin = _context.Admins.First(a => 
                 a.EmailAddress == data.Email && 
                 a.PasswordHash == Crypto.Sha256(data.Password)
             );
             session.SetInt32(Session.adminId, admin.Id);
+            return admin;
         }
         
         public void Logout(ISession session, IResponseCookies cookies)

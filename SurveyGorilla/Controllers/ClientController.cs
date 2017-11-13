@@ -6,120 +6,86 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SurveyGorilla.Models;
+using SurveyGorilla.Logic;
 
 namespace SurveyGorilla.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Client")]
+    [Route("api/Survey")]
     public class ClientController : Controller
     {
         private readonly SurveyContext _context;
+        private readonly ClientLogic _logic;
+
+        private int AdminId
+        {
+            get
+            {
+                return HttpContext.Session.GetInt32(Session.adminId).Value;
+            }
+        }
 
         public ClientController(SurveyContext context)
         {
             _context = context;
+            _logic = new ClientLogic(_context);
         }
 
-        // GET: api/Client
-        [HttpGet]
-        public IEnumerable<ClientEntity> GetClients()
+        // GET: {surveyId}/Client
+        [HttpGet("{surveyId}/Client")]
+        public IActionResult GetClients()
         {
-            return _context.Clients;
-        }
-
-        // GET: api/Client/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClientEntity([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var clientEntity = await _context.Clients.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (clientEntity == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(clientEntity);
-        }
-
-        // PUT: api/Client/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutClientEntity([FromRoute] int id, [FromBody] ClientEntity clientEntity)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != clientEntity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(clientEntity).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return Ok(_logic.GetAllClient(AdminId));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                if (!ClientEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(e);
             }
-
-            return NoContent();
         }
 
-        // POST: api/Client
-        [HttpPost]
-        public async Task<IActionResult> PostClientEntity([FromBody] ClientEntity clientEntity)
+        // GET: {surveyId}/Client/{clientId}
+        [HttpGet("{surveyId}/Client/{clientId}")]
+        public IActionResult GetClientEntity([FromRoute] int surveyId, [FromRoute] int clientId)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                return Ok(_logic.GetClient(AdminId, surveyId, clientId));
             }
-
-            _context.Clients.Add(clientEntity);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetClientEntity", new { id = clientEntity.Id }, clientEntity);
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
-        // DELETE: api/Client/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClientEntity([FromRoute] int id)
+        // POST: {surveyId}/Client
+        [HttpPost("{surveyId}/Client")]
+        public IActionResult PostClientEntity([FromRoute] int surveyId, [FromBody] ClientData clientData)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                return Ok(_logic.CreateClient(AdminId, surveyId, clientData));
             }
-
-            var clientEntity = await _context.Clients.SingleOrDefaultAsync(m => m.Id == id);
-            if (clientEntity == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return BadRequest(e);
             }
-
-            _context.Clients.Remove(clientEntity);
-            await _context.SaveChangesAsync();
-
-            return Ok(clientEntity);
         }
 
-        private bool ClientEntityExists(int id)
+        // DELETE: {surveyId}/Client/{clientId}
+        [HttpDelete("{surveyId}/Client/{clientId}")]
+        public IActionResult DeleteClientEntity([FromRoute] int surveyId, [FromRoute] int clientId)
         {
-            return _context.Clients.Any(e => e.Id == id);
+            try
+            {
+                return Ok(_logic.DeleteClient(AdminId, surveyId, clientId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
+
     }
 }

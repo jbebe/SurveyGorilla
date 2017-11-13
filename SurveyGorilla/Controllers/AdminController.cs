@@ -26,7 +26,7 @@ namespace SurveyGorilla.Controllers
         {
             return _context.Admins;
         }
-
+        
         // GET: api/Admin/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAdminEntity([FromRoute] int id)
@@ -45,7 +45,7 @@ namespace SurveyGorilla.Controllers
 
             return Ok(adminEntity);
         }
-
+        
         // PUT: api/Admin/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdminEntity([FromRoute] int id, [FromBody] AdminEntity adminEntity)
@@ -80,7 +80,7 @@ namespace SurveyGorilla.Controllers
 
             return NoContent();
         }
-
+        
         // POST: api/Admin
         [HttpPost]
         public async Task<IActionResult> PostAdminEntity([FromBody] AdminEntity adminEntity)
@@ -121,5 +121,6 @@ namespace SurveyGorilla.Controllers
         {
             return _context.Admins.Any(e => e.Id == id);
         }
+ 
     }
 }

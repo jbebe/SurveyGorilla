@@ -17,6 +17,13 @@ namespace SurveyGorilla.Controllers
         private readonly SurveyContext _context;
         private readonly SurveyLogic _logic;
 
+        private int AdminId {
+            get
+            {
+                return HttpContext.Session.GetInt32(Session.adminId).Value;
+            }
+        }
+
         public SurveyController(SurveyContext context)
         {
             _context = context;
@@ -25,106 +32,73 @@ namespace SurveyGorilla.Controllers
 
         // GET: api/Survey
         [HttpGet]
-        public IEnumerable<SurveyEntity> GetSurveys()
+        public IActionResult GetSurveys()
         {
-            return _logic.GetAllSurvey(HttpContext.Session);
+            try
+            {
+                return Ok(_logic.GetAllSurvey(AdminId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
-        // GET: api/Survey/5
+        // GET: api/Survey/{id}
         [HttpGet("{id}")]
         public IActionResult GetSurveyEntity([FromRoute] int id)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    return Ok(_logic.GetSurvey(HttpContext.Session, id));
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        // PUT: api/Survey/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSurveyEntity([FromRoute] int id, [FromBody] SurveyEntity surveyEntity)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != surveyEntity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(surveyEntity).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return Ok(_logic.GetSurvey(AdminId, id));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                if (!SurveyEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(e);
             }
-
-            return NoContent();
         }
 
-        // POST: api/Survey
+        // POST: api/Survey/
         [HttpPost]
         public IActionResult PostSurveyEntity([FromBody] SurveyData data)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _logic.CreateSurvey(HttpContext.Session, data);
-                return Ok();
+                return Ok(_logic.CreateSurvey(AdminId, data));
             }
-            else
+            catch (Exception e)
             {
-                return BadRequest(ModelState);
+                return BadRequest(e);
             }
         }
 
-        // DELETE: api/Survey/5
+        // PUT: api/Survey/{id}
+        [HttpPut("{id}")]
+        public IActionResult PutSurveyEntity([FromRoute] int surveyId, [FromBody] SurveyData data)
+        {
+            try
+            {
+                return Ok(_logic.UpdateSurvey(AdminId, surveyId, data));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // DELETE: api/Survey/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSurveyEntity([FromRoute] int id)
+        public IActionResult DeleteSurveyEntity([FromRoute] int surveyId)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                return Ok(_logic.DeleteSurvey(AdminId, surveyId));
             }
-
-            var surveyEntity = await _context.Surveys.SingleOrDefaultAsync(m => m.Id == id);
-            if (surveyEntity == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return BadRequest(e);
             }
-
-            _context.Surveys.Remove(surveyEntity);
-            await _context.SaveChangesAsync();
-
-            return Ok(surveyEntity);
         }
 
-        private bool SurveyEntityExists(int id)
-        {
-            return _context.Surveys.Any(e => e.Id == id);
-        }
     }
 }

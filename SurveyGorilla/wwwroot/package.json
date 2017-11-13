@@ -1,0 +1,14 @@
+{
+  "name": "SurveyGorilla",
+  "version": "0.1.0",
+  "main": "js/main.js",
+  "dependencies": {
+    "jquery": "^3.2.1",
+	"js-cookie": "^2.2.0",
+	"jquery-router-plugin": "^1.0.0",
+	"sammy": "^0.7.6"
+  },
+  "scripts": {
+	"init": "yarn install --modules-folder ./lib"
+  }
+}

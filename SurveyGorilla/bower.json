@@ -1,8 +1,5 @@
 {
   "name": "asp.net",
   "private": true,
-  "dependencies": {
-    "jQuery": "^3.2.1",
-    "sammy": "^0.7.6"
-  }
+  "dependencies": {}
 }

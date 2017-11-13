@@ -11,12 +11,12 @@ namespace SurveyGorilla.Controllers
     public class AppController : Controller
     {
         private readonly SurveyContext _context;
-        private readonly UserControl _userControl;
+        private readonly UserControl _logic;
 
         public AppController(SurveyContext context)
         {
             _context = context;
-            _userControl = new UserControl(_context);
+            _logic = new UserControl(_context);
         }
 
         [Route("")]
@@ -28,15 +28,15 @@ namespace SurveyGorilla.Controllers
 
         [Route("register")]
         [HttpPost]
-        public IActionResult Register([FromBody] RegisterData data)
+        public IActionResult Register([FromBody] AdminData data)
         {
-            if (ModelState.IsValid) {
-                _userControl.Register(data);
-                return Ok();
-            }
-            else
+            try
             {
-                return BadRequest();
+                return Ok(_logic.Register(data));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
             }
         }
 
@@ -44,14 +44,14 @@ namespace SurveyGorilla.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] LoginData data)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _userControl.Login(HttpContext.Session, data);
+                _logic.Login(HttpContext.Session, data);
                 return Ok();
             }
-            else
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -59,14 +59,14 @@ namespace SurveyGorilla.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            if (ModelState.IsValid)
+            try
             {
-                _userControl.Logout(HttpContext.Session, Response.Cookies);
+                _logic.Logout(HttpContext.Session, Response.Cookies);
                 return Ok();
             }
-            else
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 

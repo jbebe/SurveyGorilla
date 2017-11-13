@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SurveyGorilla.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace SurveyGorilla.Logic
 {
@@ -17,29 +17,49 @@ namespace SurveyGorilla.Logic
             _context = context;
         }
 
-        public void CreateSurvey(ISession session, SurveyData data)
+        public SurveyEntity CreateSurvey(int adminId, SurveyData data)
         {
             var survey = new SurveyEntity();
-            survey.AdminId = session.GetInt32(Session.adminId).Value;
+            survey.AdminId = adminId;
             var surveyInfo = new {
                 created = DateTime.UtcNow,
-                name = data.Name
+                name = JObject.Parse(data.Info).Value<string>("name")
             };
             survey.Info = JsonConvert.SerializeObject(surveyInfo);
             _context.Surveys.Add(survey);
             _context.SaveChanges();
+            return survey;
         }
 
-        public IEnumerable<SurveyEntity> GetAllSurvey(ISession session)
+        public IEnumerable<SurveyEntity> GetAllSurvey(int adminId)
         {
-            var adminId = session.GetInt32(Session.adminId);
             return _context.Surveys.Where(survey => survey.AdminId == adminId);
         }
 
-        public SurveyEntity GetSurvey(ISession session, int id)
+        public SurveyEntity GetSurvey(int adminId, int surveyId)
+        {   
+            return _context.Surveys.Single(survey => survey.AdminId == adminId && survey.Id == surveyId);
+        }
+
+        public SurveyEntity DeleteSurvey(int adminId, int surveyId)
         {
-            var adminId = session.GetInt32(Session.adminId);
-            return _context.Surveys.Single(s => s.AdminId == adminId && s.Id == id);
+            var surveyEntity = GetSurvey(adminId, surveyId);
+            _context.Surveys.Remove(surveyEntity);
+            _context.SaveChanges();
+            return surveyEntity;
+        }
+
+        internal SurveyEntity UpdateSurvey(int adminId, int surveyId, SurveyData data)
+        {
+            var survey = GetSurvey(adminId, surveyId);
+            var dbInfo = JObject.Parse(survey.Info);
+            var newInfo = JObject.Parse(data.Info);
+            newInfo.Merge(dbInfo, new JsonMergeSettings
+            {
+                MergeArrayHandling = MergeArrayHandling.Merge
+            });
+            survey.Info = newInfo.ToString();
+            return survey;
         }
     }
 }
