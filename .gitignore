@@ -305,3 +305,4 @@ __pycache__/
 OpenCover/
 
 SurveyGorilla/wwwroot/lib/**
+**/yarn.lock
