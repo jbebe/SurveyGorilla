@@ -6,120 +6,128 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SurveyGorilla.Models;
+using SurveyGorilla.Logic;
 
 namespace SurveyGorilla.Controllers
 {
+    /// <summary>Manages admins (survey creators)</summary>
     [Produces("application/json")]
     [Route("api/Admin")]
     public class AdminController : Controller
     {
         private readonly SurveyContext _context;
+        private readonly AdminLogic _logic;
 
         public AdminController(SurveyContext context)
         {
             _context = context;
+            _logic = new AdminLogic(_context);
         }
 
-        // GET: api/Admin
+        /// <summary>Returns all admins</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access these endpoints.
+        /// </remarks>
+        /// <returns>Array of admin entities</returns>
         [HttpGet]
-        public IEnumerable<AdminEntity> GetAdmins()
+        public IActionResult GetAdmins()
         {
-            return _context.Admins;
-        }
-        
-        // GET: api/Admin/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAdminEntity([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var adminEntity = await _context.Admins.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (adminEntity == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(adminEntity);
-        }
-        
-        // PUT: api/Admin/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdminEntity([FromRoute] int id, [FromBody] AdminEntity adminEntity)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != adminEntity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(adminEntity).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return Ok(_logic.GetAllAdmins());
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                if (!AdminEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(e);
             }
-
-            return NoContent();
         }
-        
-        // POST: api/Admin
+
+        /// <summary>Returns an admin with given ID</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access these endpoints.
+        /// </remarks>
+        /// <param name="adminId">ID of the admin to get</param>
+        /// <returns>Admin entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id</response>
+        [HttpGet("{adminId}")]
+        public IActionResult GetAdminEntity([FromRoute] int adminId)
+        {
+            try
+            {
+                return Ok(_logic.GetAdmin(adminId));
+            } catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        /// <summary>Updates an admin with given ID</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access these endpoints.
+        /// </remarks>
+        /// <param name="adminId">ID of the admin to update</param>
+        /// <param name="adminData">Partially filled admin data</param>
+        /// <returns>Admin entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id or content</response>
+        [HttpPut("{adminId}")]
+        public IActionResult PutAdminEntity([FromRoute] int adminId, [FromBody] AdminData adminData)
+        {
+            try
+            {
+                return Ok(_logic.UpdateAdmin(adminId, adminData));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        /// <summary>Creates a new admin</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access these endpoints.
+        /// </remarks>
+        /// <param name="adminData">Partially filled admin data</param>
+        /// <returns>Entity with ID fields filled</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id or content</response>
         [HttpPost]
-        public async Task<IActionResult> PostAdminEntity([FromBody] AdminEntity adminEntity)
+        public IActionResult PostAdminEntity([FromBody] AdminData adminData)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                return Ok(_logic.CreateAdmin(adminData));
+            } catch (Exception e)
+            {
+                return BadRequest(e);
             }
-
-            _context.Admins.Add(adminEntity);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAdminEntity", new { id = adminEntity.Id }, adminEntity);
         }
 
-        // DELETE: api/Admin/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAdminEntity([FromRoute] int id)
+        /// <summary>Deletes an admin with given ID</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access these endpoints.
+        /// </remarks>
+        /// <param name="adminId">ID of the admin to get</param>
+        /// <returns>Admin entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id</response>
+        [HttpDelete("{adminId}")]
+        public IActionResult DeleteAdminEntity([FromRoute] int adminId)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                return Ok(_logic.DeleteAdmin(adminId));
             }
-
-            var adminEntity = await _context.Admins.SingleOrDefaultAsync(m => m.Id == id);
-            if (adminEntity == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return BadRequest(e);
             }
-
-            _context.Admins.Remove(adminEntity);
-            await _context.SaveChangesAsync();
-
-            return Ok(adminEntity);
-        }
-
-        private bool AdminEntityExists(int id)
-        {
-            return _context.Admins.Any(e => e.Id == id);
         }
  
     }

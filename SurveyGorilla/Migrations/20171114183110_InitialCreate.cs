@@ -15,9 +15,9 @@ namespace SurveyGorilla.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Info = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +31,8 @@ namespace SurveyGorilla.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AdminId = table.Column<int>(type: "int", nullable: false),
-                    Info = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,8 +51,8 @@ namespace SurveyGorilla.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Info = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SurveyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -69,8 +70,7 @@ namespace SurveyGorilla.Migrations
                 name: "IX_Admins_EmailAddress",
                 table: "Admins",
                 column: "EmailAddress",
-                unique: true,
-                filter: "[EmailAddress] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_SurveyId",
@@ -81,8 +81,7 @@ namespace SurveyGorilla.Migrations
                 name: "IX_Clients_EmailAddress_SurveyId",
                 table: "Clients",
                 columns: new[] { "EmailAddress", "SurveyId" },
-                unique: true,
-                filter: "[EmailAddress] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Surveys_AdminId",

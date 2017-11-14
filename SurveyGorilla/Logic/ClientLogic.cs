@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SurveyGorilla.Models;
+using Newtonsoft.Json.Linq;
 
 namespace SurveyGorilla.Logic
 {
@@ -41,6 +42,30 @@ namespace SurveyGorilla.Logic
         {
             var client = GetClient(adminId, surveyId, clientId);
             _context.Remove(client);
+            _context.SaveChanges();
+            return client;
+        }
+
+        public ClientEntity UpdateClient(int adminId, int surveyId, int clientId, ClientData clientData)
+        {
+            var client = GetClient(adminId, surveyId, clientId);
+
+            if (clientData.Email != null)
+            {
+                client.EmailAddress = clientData.Email;
+            }
+            if (clientData.Info != null)
+            {
+                var oldInfo = JObject.Parse(client.Info);
+                var newInfo = JObject.Parse(clientData.Info);
+                newInfo.Merge(oldInfo, new JsonMergeSettings()
+                {
+                    MergeArrayHandling = MergeArrayHandling.Union,
+                    MergeNullValueHandling = MergeNullValueHandling.Ignore
+                });
+                client.Info = newInfo.ToString();
+            }
+
             _context.SaveChanges();
             return client;
         }

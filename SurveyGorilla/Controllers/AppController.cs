@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace SurveyGorilla.Controllers
 {
+    /// <summary>Controls the non-api part of the SPA</summary>
     [Produces("text/html")]
     [Route("/")]
     public class AppController : Controller
@@ -19,6 +20,13 @@ namespace SurveyGorilla.Controllers
             _logic = new UserControl(_context);
         }
 
+        /// <summary>Gets the index page</summary>
+        /// <remarks>
+        /// It is only for convenience. A single page 
+        /// web-application does not need html to be served from code.
+        /// </remarks>
+        /// <returns>index.html</returns>
+        /// <response code="200">Successful</response>
         [Route("")]
         [HttpGet]
         public IActionResult Index()
@@ -26,6 +34,9 @@ namespace SurveyGorilla.Controllers
             return File("~/index.html", "text/html");
         }
 
+        /// <summary>Register a new user</summary>
+        /// <returns>admin entity</returns>
+        /// <response code="200">Successful</response>
         [Route("register")]
         [HttpPost]
         public IActionResult Register([FromBody] AdminData data)
@@ -40,6 +51,15 @@ namespace SurveyGorilla.Controllers
             }
         }
 
+        /// <summary>Logs in a new user</summary>
+        /// <remarks>
+        /// The session now holds the admin id.
+        /// The api is now restricted in a way that the users 
+        /// can only manipulate data that was created by them.
+        /// </remarks>
+        /// <returns>admin entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Could not log in with the credentials</response>
         [Route("login")]
         [HttpPost]
         public IActionResult Login([FromBody] LoginData data)
@@ -55,6 +75,14 @@ namespace SurveyGorilla.Controllers
             }
         }
 
+        /// <summary>Logs out a new user</summary>
+        /// <remarks>
+        /// The session variable holding the the admin id is deleted.
+        /// To access the api again, you have to log in.
+        /// </remarks>
+        /// <returns>admin entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Could not log out</response>
         [Route("logout")]
         [HttpGet]
         public IActionResult Logout()

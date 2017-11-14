@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace SurveyGorilla.Models
@@ -10,15 +11,20 @@ namespace SurveyGorilla.Models
     public class ClientEntity
     {
         [Key]
+        [Required]
         public int Id { get; set; }
 
+        [Required]
         public string EmailAddress { get; set; }
 
         [ForeignKey("Survey")]
+        [Required]
         public int SurveyId { get; set; }
 
+        [Required]
         public string Info { get; set; }
 
+        [IgnoreDataMember]
         public SurveyEntity Survey { get; set; }
     }
 }

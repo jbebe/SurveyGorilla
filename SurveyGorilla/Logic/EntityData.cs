@@ -8,36 +8,34 @@ namespace SurveyGorilla.Logic
 {
     public class AdminData
     {
-        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         public string Password { get; set; }
+
+        public string Info { get; set; }
     }
 
     public class LoginData
     {
-        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         public string Password { get; set; }
     }
 
     public class SurveyData
     {
-        [Required]
+        public string Name { get; set; }
+
         public string Info { get; set; }
     }
 
     public class ClientData
     {
-        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         public string Info { get; set; }
     }
     

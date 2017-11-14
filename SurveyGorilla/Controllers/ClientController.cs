@@ -10,6 +10,8 @@ using SurveyGorilla.Logic;
 
 namespace SurveyGorilla.Controllers
 {
+
+    /// <summary>Manages clients (who fills the survey)</summary>
     [Produces("application/json")]
     [Route("api/Survey")]
     public class ClientController : Controller
@@ -31,7 +33,11 @@ namespace SurveyGorilla.Controllers
             _logic = new ClientLogic(_context);
         }
 
-        // GET: {surveyId}/Client
+        /// <summary>Returns all clients</summary>
+        /// <remarks>
+        /// You have to be logged in as admin, to access this endpoint!
+        /// </remarks>
+        /// <returns>Array of client entities</returns>
         [HttpGet("{surveyId}/Client")]
         public IActionResult GetClients()
         {
@@ -45,7 +51,16 @@ namespace SurveyGorilla.Controllers
             }
         }
 
-        // GET: {surveyId}/Client/{clientId}
+        /// <summary>Returns a client with given ID</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access this endpoint.
+        /// </remarks>
+        /// <param name="surveyId">ID of the survey that holds the client</param>
+        /// <param name="clientId">ID of the client</param>
+        /// <returns>Client entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id</response>
         [HttpGet("{surveyId}/Client/{clientId}")]
         public IActionResult GetClientEntity([FromRoute] int surveyId, [FromRoute] int clientId)
         {
@@ -59,7 +74,16 @@ namespace SurveyGorilla.Controllers
             }
         }
 
-        // POST: {surveyId}/Client
+        /// <summary>Creates a new client</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access this endpoint.
+        /// </remarks>
+        /// <param name="surveyId">ID of the survey that holds the client</param>
+        /// <param name="clientData">Partially filled client data</param>
+        /// <returns>Client entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id or content</response>
         [HttpPost("{surveyId}/Client")]
         public IActionResult PostClientEntity([FromRoute] int surveyId, [FromBody] ClientData clientData)
         {
@@ -73,7 +97,39 @@ namespace SurveyGorilla.Controllers
             }
         }
 
-        // DELETE: {surveyId}/Client/{clientId}
+        /// <summary>Updates a client with given ID</summary>
+        /// <remarks>
+        /// You have to be logged in as admin, to access this endpoint!
+        /// </remarks>
+        /// <param name="surveyId">ID of the survey that holds the client</param>
+        /// <param name="clientId">ID of the client to update</param>
+        /// <param name="clientData">Partially filled client data</param>
+        /// <returns>Client entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id or content</response>
+        [HttpPut("{surveyId}/Client/{clientId}")]
+        public IActionResult UpdateClientEntity([FromRoute] int surveyId, [FromRoute] int clientId, [FromBody] ClientData clientData)
+        {
+            try
+            {
+                return Ok(_logic.UpdateClient(AdminId, surveyId, clientId, clientData));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        /// <summary>Deletes a client with given ID</summary>
+        /// <remarks>
+        /// You have to be a server admin (stored in a session variable) 
+        /// to access these endpoints.
+        /// </remarks>
+        /// <param name="surveyId">ID of the survey that holds the client</param>
+        /// <param name="clientId">ID of the client</param>
+        /// <returns>Client entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Invalid id</response>
         [HttpDelete("{surveyId}/Client/{clientId}")]
         public IActionResult DeleteClientEntity([FromRoute] int surveyId, [FromRoute] int clientId)
         {

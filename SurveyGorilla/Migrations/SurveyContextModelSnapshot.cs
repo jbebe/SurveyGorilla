@@ -25,17 +25,19 @@ namespace SurveyGorilla.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("EmailAddress");
+                    b.Property<string>("EmailAddress")
+                        .IsRequired();
 
-                    b.Property<string>("Info");
+                    b.Property<string>("Info")
+                        .IsRequired();
 
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmailAddress")
-                        .IsUnique()
-                        .HasFilter("[EmailAddress] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Admins");
                 });
@@ -45,9 +47,11 @@ namespace SurveyGorilla.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("EmailAddress");
+                    b.Property<string>("EmailAddress")
+                        .IsRequired();
 
-                    b.Property<string>("Info");
+                    b.Property<string>("Info")
+                        .IsRequired();
 
                     b.Property<int>("SurveyId");
 
@@ -56,8 +60,7 @@ namespace SurveyGorilla.Migrations
                     b.HasIndex("SurveyId");
 
                     b.HasIndex("EmailAddress", "SurveyId")
-                        .IsUnique()
-                        .HasFilter("[EmailAddress] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
@@ -69,7 +72,11 @@ namespace SurveyGorilla.Migrations
 
                     b.Property<int>("AdminId");
 
-                    b.Property<string>("Info");
+                    b.Property<string>("Info")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

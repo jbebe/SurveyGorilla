@@ -17,6 +17,29 @@ namespace SurveyGorilla.Logic
             _context = context;
         }
 
+        public IEnumerable<SurveyEntity> GetAllSurvey(int adminId)
+        {
+            return _context.Surveys.Where(survey => survey.AdminId == adminId);
+        }
+
+        public SurveyEntity GetSurvey(int adminId, int surveyId)
+        {
+            return _context.Surveys.Single(survey => survey.AdminId == adminId && survey.Id == surveyId);
+        }
+
+        public SurveyEntity UpdateSurvey(int adminId, int surveyId, SurveyData data)
+        {
+            var survey = GetSurvey(adminId, surveyId);
+            var dbInfo = JObject.Parse(survey.Info);
+            var newInfo = JObject.Parse(data.Info);
+            newInfo.Merge(dbInfo, new JsonMergeSettings
+            {
+                MergeArrayHandling = MergeArrayHandling.Merge
+            });
+            survey.Info = newInfo.ToString();
+            return survey;
+        }
+
         public SurveyEntity CreateSurvey(int adminId, SurveyData data)
         {
             var survey = new SurveyEntity();
@@ -30,17 +53,7 @@ namespace SurveyGorilla.Logic
             _context.SaveChanges();
             return survey;
         }
-
-        public IEnumerable<SurveyEntity> GetAllSurvey(int adminId)
-        {
-            return _context.Surveys.Where(survey => survey.AdminId == adminId);
-        }
-
-        public SurveyEntity GetSurvey(int adminId, int surveyId)
-        {   
-            return _context.Surveys.Single(survey => survey.AdminId == adminId && survey.Id == surveyId);
-        }
-
+        
         public SurveyEntity DeleteSurvey(int adminId, int surveyId)
         {
             var surveyEntity = GetSurvey(adminId, surveyId);
@@ -49,17 +62,5 @@ namespace SurveyGorilla.Logic
             return surveyEntity;
         }
 
-        internal SurveyEntity UpdateSurvey(int adminId, int surveyId, SurveyData data)
-        {
-            var survey = GetSurvey(adminId, surveyId);
-            var dbInfo = JObject.Parse(survey.Info);
-            var newInfo = JObject.Parse(data.Info);
-            newInfo.Merge(dbInfo, new JsonMergeSettings
-            {
-                MergeArrayHandling = MergeArrayHandling.Merge
-            });
-            survey.Info = newInfo.ToString();
-            return survey;
-        }
     }
 }
