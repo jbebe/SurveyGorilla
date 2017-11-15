@@ -1,8 +1,10 @@
-﻿using System;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SurveyGorilla.Models;
 using Newtonsoft.Json.Linq;
+using SurveyGorilla.Misc;
 
 namespace SurveyGorilla.Logic
 {
@@ -32,6 +34,10 @@ namespace SurveyGorilla.Logic
         public ClientEntity CreateClient(int adminId, int surveyId, ClientData clientData)
         {
             var client = new ClientEntity();
+            if (new[] { clientData.Email, clientData.Info, clientData.Info.ToObject()["name"] }.Any(entry => entry == null))
+            {
+                throw new Exception("Important properties were not filled!");
+            }
             client.EmailAddress = clientData.Email;
             client.Info = clientData.Info;
             client.SurveyId = surveyId;

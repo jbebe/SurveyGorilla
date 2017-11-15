@@ -1,8 +1,10 @@
-﻿using System;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using System;
 using Microsoft.AspNetCore.Mvc;
 using SurveyGorilla.Models;
 using SurveyGorilla.Logic;
 using Microsoft.AspNetCore.Http;
+using static SurveyGorilla.Misc.Helper;
 
 namespace SurveyGorilla.Controllers
 {
@@ -37,17 +39,19 @@ namespace SurveyGorilla.Controllers
         /// <summary>Register a new user</summary>
         /// <returns>admin entity</returns>
         /// <response code="200">Successful</response>
-        [Route("register")]
+        /// <response code="400">Unsuccessful</response>
+        [Route("Register")]
         [HttpPost]
         public IActionResult Register([FromBody] AdminData data)
         {
             try
             {
-                return Ok(_logic.Register(data));
+                return Json(_logic.Register(data));
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                Response.StatusCode = 400;
+                return Json(e);
             }
         }
 
@@ -57,21 +61,21 @@ namespace SurveyGorilla.Controllers
         /// The api is now restricted in a way that the users 
         /// can only manipulate data that was created by them.
         /// </remarks>
-        /// <returns>admin entity</returns>
+        /// <returns>Admin entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Could not log in with the credentials</response>
-        [Route("login")]
+        [Route("Login")]
         [HttpPost]
         public IActionResult Login([FromBody] LoginData data)
         {
             try
             {
-                _logic.Login(HttpContext.Session, data);
-                return Ok();
+                return Json(_logic.Login(HttpContext.Session, data));
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                Response.StatusCode = 400;
+                return Json(e);
             }
         }
 
@@ -83,18 +87,18 @@ namespace SurveyGorilla.Controllers
         /// <returns>admin entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Could not log out</response>
-        [Route("logout")]
+        [Route("Logout")]
         [HttpGet]
         public IActionResult Logout()
         {
             try
             {
-                _logic.Logout(HttpContext.Session, Response.Cookies);
-                return Ok();
+                return Json(_logic.Logout(HttpContext.Session, Response.Cookies));
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                Response.StatusCode = 400;
+                return Json(e);
             }
         }
 

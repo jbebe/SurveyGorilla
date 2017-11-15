@@ -58,7 +58,7 @@ namespace SurveyGorilla.Controllers
         /// <returns>Client entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Invalid id</response>
-        [HttpGet("{id}")]
+        [HttpGet("{surveyId}")]
         public IActionResult GetSurveyEntity([FromRoute] int surveyId)
         {
             try
@@ -101,7 +101,7 @@ namespace SurveyGorilla.Controllers
         /// <returns>Survey entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Invalid id or content</response>
-        [HttpPut("{id}")]
+        [HttpPut("{surveyId}")]
         public IActionResult PutSurveyEntity([FromRoute] int surveyId, [FromBody] SurveyData surveyData)
         {
             try
@@ -122,7 +122,7 @@ namespace SurveyGorilla.Controllers
         /// <returns>Survey entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Invalid id</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{surveyId}")]
         public IActionResult DeleteSurveyEntity([FromRoute] int surveyId)
         {
             try

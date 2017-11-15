@@ -82,7 +82,8 @@ function RegisterAction(evt) {
     let password = form.find('input[type=password]').val();
     let data = {
         Email: email,
-        Password: password
+        Password: password,
+        Info: JSON.stringify({})
     };
     let onSuccess = () => {
         LoadView('login');
@@ -107,7 +108,7 @@ function LoadSurveyList() {
             list.append(
                 `<li>
                     <button onclick="LoadView('survey', ${survey.id})">
-                        ${info.name}(${survey.id}) -> ${info.created}
+                        ${survey.name}(${survey.id}) -> ${info.created}
                     </button>
                     <button onclick="DeleteSurveyAction.call(this, ${survey.id})">X</button>
                 </li>`
@@ -128,9 +129,8 @@ function CreateSurveyAction(evt) {
     let form = $(this);
     let name = form.find('input[type=text]').val();
     let data = {
-        info: JSON.stringify({
-            name: name
-        })
+        name: name,
+        info: JSON.stringify({})
     };
     let onSuccess = () => {
         LoadView('survey-list');
@@ -236,6 +236,31 @@ function CreateQuestionAction(evt) {
     return false;
 }
 
+/*
+Question Structure:
+[
+    {
+        type: "number"
+        title: "What is your favorite number?"
+        value: <default-number>
+    },
+    {
+        type: "text"
+        title: "What is your quest?"
+        value: <default-string>
+    },
+    {
+        type: "choose"
+        title: "What is your favorite color?"
+        value: ["blue", "yello", "brown"]
+    },
+    {
+        type: "checkbox"
+        title: "What is your favorite color?"
+        value: ["blue", "yello", "brown"]
+    }
+]
+*/
 function CreateQuestionAction(evt) {
     evt.preventDefault();
 
@@ -262,12 +287,12 @@ function CreateQuestionAction(evt) {
     return false;
 }
 
-function CreateQuestionAction(evt) {
+function CreateClientAction(evt) {
     evt.preventDefault();
 
     let form = $(this);
-    let name = form.find('input[type=text]:eq(0)').val();
-    let email = form.find('input[type=text]:eq(1)').val();
+    let name = form.find('input[type=text]').val();
+    let email = form.find('input[type=email]').val();
     let data = {
         email: email,
         info: JSON.stringify({

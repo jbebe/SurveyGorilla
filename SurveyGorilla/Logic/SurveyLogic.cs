@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using Newtonsoft.Json;
 using SurveyGorilla.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using SurveyGorilla.Misc;
 
 namespace SurveyGorilla.Logic
 {
@@ -40,15 +42,19 @@ namespace SurveyGorilla.Logic
             return survey;
         }
 
-        public SurveyEntity CreateSurvey(int adminId, SurveyData data)
+        public SurveyEntity CreateSurvey(int adminId, SurveyData surveyData)
         {
             var survey = new SurveyEntity();
+            if (new[] { surveyData.Name, surveyData.Info }.Any(entry => entry == null))
+            {
+                throw new Exception("Important properties were not filled!");
+            }
             survey.AdminId = adminId;
+            survey.Name = surveyData.Name;
             var surveyInfo = new {
-                created = DateTime.UtcNow,
-                name = JObject.Parse(data.Info).Value<string>("name")
+                created = DateTime.UtcNow
             };
-            survey.Info = JsonConvert.SerializeObject(surveyInfo);
+            survey.Info = surveyInfo.ToJson();
             _context.Surveys.Add(survey);
             _context.SaveChanges();
             return survey;

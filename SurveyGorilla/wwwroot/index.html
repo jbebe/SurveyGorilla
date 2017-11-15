@@ -49,6 +49,7 @@
         <h3>Survey list:</h3>
         <button onclick="LoadView('survey-create');">Create Survey</button>
         <ul data-load="LoadSurveyList"></ul>
+        <button onclick="LoadView('login');">Back to Login</button>
     </div>
     <div id="survey-view" style="display:none;">
         <h3>Survey:</h3>
@@ -78,7 +79,7 @@
         <form onsubmit="CreateClientAction.call(this, event)">
             <label>
                 Name: <input type="text" />
-                Email: <input type="text" />
+                Email: <input type="email" />
             </label>
             <input type="submit" value="Submit" />
         </form>

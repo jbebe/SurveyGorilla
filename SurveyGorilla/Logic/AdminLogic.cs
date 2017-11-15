@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace SurveyGorilla.Logic
             var adminInfo = new { registered = DateTime.UtcNow };
             if (new[] { data.Email, data.Info, data.Password }.Any(entry => entry == null))
             {
-                throw new Exception("Important properties are not filled!");
+                throw new Exception("Important properties were not filled!");
             }
             admin.EmailAddress = data.Email;
             admin.PasswordHash = Crypto.Sha256(data.Password);

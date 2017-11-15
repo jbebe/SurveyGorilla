@@ -33,10 +33,13 @@ namespace SurveyGorilla.Logic
             return admin;
         }
         
-        public void Logout(ISession session, IResponseCookies cookies)
+        public AdminEntity Logout(ISession session, IResponseCookies cookies)
         {
+            var adminId = session.GetInt32(Session.adminId).Value;
+            var adminEntity = _context.Admins.Single(admin => admin.Id == adminId);
             session.Clear();
             cookies.Delete(".AspNetCore.Session");
+            return adminEntity;
         }
     }
 }
