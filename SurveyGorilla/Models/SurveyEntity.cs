@@ -20,7 +20,7 @@ namespace SurveyGorilla.Models
 
         [Required]
         public string Name { get; set; }
-
+        
         [Required]
         public string Info { get; set; }
 

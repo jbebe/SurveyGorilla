@@ -55,6 +55,8 @@ namespace SurveyGorilla.Migrations
 
                     b.Property<int>("SurveyId");
 
+                    b.Property<string>("Token");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SurveyId");

@@ -1,10 +1,11 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using SurveyGorilla.Models;
 using Newtonsoft.Json.Linq;
 using SurveyGorilla.Misc;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace SurveyGorilla.Logic
 {
@@ -41,6 +42,8 @@ namespace SurveyGorilla.Logic
             client.EmailAddress = clientData.Email;
             client.Info = clientData.Info;
             client.SurveyId = surveyId;
+            _context.Add(client);
+            _context.SaveChanges();
             return client;
         }
 
@@ -73,6 +76,45 @@ namespace SurveyGorilla.Logic
 
             _context.SaveChanges();
             return client;
+        }
+
+        public ClientEntity UpdateClientAnswers(string token, ClientData clientData)
+        {
+            if (!IsTokenValid(token))
+            {
+                return null;
+            }
+            var client = _context.Clients.Single(c => c.Token == token);
+            var oldInfo = JObject.Parse(client.Info);
+            var newInfo = JObject.Parse(clientData.Info);
+            newInfo.Merge(oldInfo, new JsonMergeSettings
+            {
+                MergeArrayHandling = MergeArrayHandling.Concat
+            });
+            client.Info = newInfo.ToString();
+            _context.SaveChanges();
+            return client;
+        }
+
+        private bool IsTokenValid(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new Exception("Token is missing from path!");
+            }
+            var client = _context.Clients.Single(c => c.Token == token);
+            dynamic surveyInfoObj = client.Survey.Info.ToObject();
+            dynamic availability = surveyInfoObj.availability;
+            var surveyStart = JsonConvert.DeserializeObject<DateTime>(availability.start);
+            var surveyEnd = JsonConvert.DeserializeObject<DateTime>(availability.end);
+            var currentGMT = DateTime.UtcNow;
+            if (currentGMT >= surveyStart && currentGMT <= surveyEnd)
+            {
+                return true;
+            } else
+            {
+                throw new ArgumentOutOfRangeException($"({currentGMT} >= {surveyStart} && {currentGMT} <= {surveyEnd}) is not ");
+            }
         }
     }
 }

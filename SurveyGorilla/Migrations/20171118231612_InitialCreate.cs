@@ -53,7 +53,8 @@ namespace SurveyGorilla.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SurveyId = table.Column<int>(type: "int", nullable: false)
+                    SurveyId = table.Column<int>(type: "int", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

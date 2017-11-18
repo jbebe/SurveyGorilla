@@ -1,5 +1,4 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,5 +18,6 @@ namespace SurveyGorilla.Misc
         {
             return JObject.Parse(obj);
         }
+
     }
 }
