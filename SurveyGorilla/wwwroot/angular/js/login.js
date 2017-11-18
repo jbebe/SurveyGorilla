@@ -27,7 +27,7 @@
 
 app.controller('LogoutController', function ($http, $location, LoginService) {
     LoginService.logout($http, function () {
-        $location.path("/login");
+        $location.path("/home");
     });
 
 });
@@ -106,6 +106,9 @@ app.factory('LoginService', function () {
                     onError(response);
                 }
             })
+        },
+        auth: function () {
+            isAuthenticated = true;
         }
     };
 });

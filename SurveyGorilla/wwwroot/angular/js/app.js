@@ -1,5 +1,5 @@
 ﻿
-var app = angular.module('myApp', ['ngRoute']);
+var app = angular.module('myApp', ['ngRoute', 'ngCookies']);
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/login', {
@@ -35,19 +35,23 @@ app.config(function ($routeProvider) {
         }).otherwise({ redirectTo: '/home' });
 });
 
-app.run(function ($rootScope, $location, LoginService) {
+app.run(function ($rootScope, $location, $cookies, LoginService) {
     $rootScope.LoginService = LoginService;
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-        var notroute = ["register", "login", "logout"];
+        var notroute = ["register", "login", "logout", "home"];
         var routepath = next.split("#!/")[1];
         if (notroute.indexOf(routepath) == -1) {
             if (!LoginService.isAuthenticated()) {
-               // $location.path("/login");
+               $location.path("/login");
             } 
         }                
     });
-    if (!LoginService.isAuthenticated()) {
-        //$location.path("/login");
+    
+    if ($cookies.get('.AspNetCore.Session')) {
+        LoginService.auth();
+        $location.path("/survey");
+    }else if (!LoginService.isAuthenticated()) {
+        $location.path("/login");
     }
 });
 
