@@ -1,0 +1,28 @@
+﻿<div class="col-md-12">
+    <h1> {{name}} - Survey Editor</h1>
+    <span>Created at {{created}}</span>
+    <h4>Add Question</h4>
+    <table class="table">
+        <tr>
+            <td>
+                <input type="text" class="form-control" ng-model="question" placeholder="question" required="" />
+            </td>
+            <td>
+                <input type="text" class="form-control" ng-model="answer" placeholder="answer" required="" />
+            </td>
+            <td>
+                <button class="btn btn-success" ng-click="addQuestion()">Add</button>
+            </td>
+        </tr>
+    </table>
+    <table class="table table-hover">
+        <tr ng-repeat="quest in questions">
+            <td>
+                <span>Question: {{quest.question}}</span>
+            </td>
+            <td>
+                <span>Answer: {{quest.answer}}</span>
+            </td>
+        </tr>
+    </table>
+</div>

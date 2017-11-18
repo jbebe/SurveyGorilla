@@ -1,0 +1,27 @@
+﻿<div class="col-md-12">
+    <h1>Admin Site</h1>
+    <hr/>
+    <h4>New</h4>
+     <table>
+        <tr>
+            <td>
+                <input type="email" class="form-control" ng-model="email" placeholder="email" required="" />
+            </td>
+            <td>
+                <input type="password" class="form-control" ng-model="password" placeholder="password" required="" />
+            </td>
+            <td>
+                <button class="btn btn-success" ng-click="newUser()">Save</button>
+            </td>
+        </tr>
+    </table>
+    <h4>Users</h4>
+    <table>  
+        <tr ng-repeat="user in users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.emailAddress }}</td>
+            <td>{{ user.info }}</td>
+            <td><button class="btn btn-danger" ng-click="deleteUser(user.id)">Delete</button></td>
+        </tr>
+    </table>
+</div>
