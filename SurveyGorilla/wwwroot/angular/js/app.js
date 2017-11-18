@@ -26,6 +26,9 @@ app.config(function ($routeProvider) {
         }).when('/survey/:surveyid/client', {
             templateUrl: 'view/client.html',
             controller: 'ClientController'
+        }).when('/survey/:surveyid/client/:id', {
+            templateUrl: 'view/clientedit.html',
+            controller: 'ClientEditController'
         }).otherwise({ redirectTo: '/home' });
 });
 

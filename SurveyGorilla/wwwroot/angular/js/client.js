@@ -26,6 +26,29 @@
 });
 
 
+app.controller('ClientEditController', function ($scope, $http, $routeParams, ClientService) {
+    $scope.surveyid = $routeParams.surveyid;
+    $scope.id = $routeParams.id;
+    $scope.editClient = function () {
+        var data = {
+            email: $scope.email,
+            info: JSON.stringify({
+                name: $scope.name
+            })
+        }
+        ClientService.update($scope.surveyid, $scope.id, data, $http);
+    }
+
+    ClientService.get($scope.surveyid, $scope.id, $http, function (response) {
+        $scope.client = response.data;
+        $scope.email = $scope.client.email;
+        $scope.info = JSON.parse($scope.client.info);
+        $scope.name = $scope.info.name;
+    });
+});
+
+
+
 app.factory('ClientService', function () {
     return {
         get: function (surveyid,id, $http, onSuccess, onError) {
