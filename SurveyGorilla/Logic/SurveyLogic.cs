@@ -29,16 +29,24 @@ namespace SurveyGorilla.Logic
             return _context.Surveys.Single(survey => survey.AdminId == adminId && survey.Id == surveyId);
         }
 
-        public SurveyEntity UpdateSurvey(int adminId, int surveyId, SurveyData data)
+        public SurveyEntity UpdateSurvey(int adminId, int surveyId, SurveyData surveyData)
         {
             var survey = GetSurvey(adminId, surveyId);
-            var dbInfo = JObject.Parse(survey.Info);
-            var newInfo = JObject.Parse(data.Info);
-            newInfo.Merge(dbInfo, new JsonMergeSettings
+            if (surveyData.Name != null)
             {
-                MergeArrayHandling = MergeArrayHandling.Merge
-            });
-            survey.Info = newInfo.ToString();
+                survey.Name = surveyData.Name;
+            }
+            if (surveyData.Info != null)
+            {
+                var dbInfo = JObject.Parse(survey.Info);
+                var newInfo = JObject.Parse(surveyData.Info);
+                newInfo.Merge(dbInfo, new JsonMergeSettings
+                {
+                    MergeArrayHandling = MergeArrayHandling.Concat
+                });
+                survey.Info = newInfo.ToString();
+            }
+            _context.SaveChanges();
             return survey;
         }
 

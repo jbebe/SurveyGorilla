@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using SurveyGorilla.Models;
 using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
+using SurveyGorilla.Logic;
 
 namespace SurveyGorilla
 {
@@ -35,6 +36,7 @@ namespace SurveyGorilla
                 // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromDays(1);
                 options.Cookie.HttpOnly = false;
+                options.Cookie.Name = Session.cookieName;
             });
 
             // Register the Swagger generator, defining one or more Swagger documents

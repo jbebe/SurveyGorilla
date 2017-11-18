@@ -64,10 +64,9 @@ namespace SurveyGorilla.Logic
             {
                 var oldInfo = JObject.Parse(client.Info);
                 var newInfo = JObject.Parse(clientData.Info);
-                newInfo.Merge(oldInfo, new JsonMergeSettings()
+                newInfo.Merge(oldInfo, new JsonMergeSettings
                 {
-                    MergeArrayHandling = MergeArrayHandling.Union,
-                    MergeNullValueHandling = MergeNullValueHandling.Ignore
+                    MergeArrayHandling = MergeArrayHandling.Concat
                 });
                 client.Info = newInfo.ToString();
             }
