@@ -23,6 +23,9 @@ app.config(function ($routeProvider) {
         }).when('/survey/:id', {
             templateUrl: 'view/surveyedit.html',
             controller: 'SurveyEditController'
+        }).when('/survey/:surveyid/client', {
+            templateUrl: 'view/client.html',
+            controller: 'ClientController'
         }).otherwise({ redirectTo: '/home' });
 });
 
@@ -43,9 +46,7 @@ app.run(function ($rootScope, $location, LoginService) {
 });
 
 
-
-
 app.controller('HomeController', function ($rootScope, LoginService) {
-    $rootScope.title = "AngularJS Login Sample";
+   //TODO
 
 });

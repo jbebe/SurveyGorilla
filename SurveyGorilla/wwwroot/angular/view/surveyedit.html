@@ -15,14 +15,15 @@
             </td>
         </tr>
     </table>
+    <h4>Questions</h4>
     <table class="table table-hover">
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+        </tr>
         <tr ng-repeat="quest in questions">
-            <td>
-                <span>Question: {{quest.question}}</span>
-            </td>
-            <td>
-                <span>Answer: {{quest.answer}}</span>
-            </td>
+            <td>{{quest.question}}</td>
+            <td>{{quest.answer}}</td>
         </tr>
     </table>
 </div>

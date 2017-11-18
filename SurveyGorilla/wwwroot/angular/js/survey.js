@@ -15,6 +15,10 @@ app.controller('SurveyController', function ($scope, $http, SurveyService) {
 
     SurveyService.list($http, function (response) {
         $scope.surveys = response.data;
+        for (var i = 0; i < $scope.surveys.length; i++) {
+            $scope.surveys[i].info = JSON.parse($scope.surveys[i].info); 
+            $scope.surveys[i].info.created = new Date($scope.surveys[i].info.created).toLocaleString()
+        }
     }, function (response) {
 
     });
@@ -42,7 +46,7 @@ app.controller('SurveyEditController', function ($scope, $http, $routeParams, Su
         $scope.survey = response.data;
         $scope.name = $scope.survey.name;
         $scope.info = JSON.parse($scope.survey.info);
-        $scope.created = $scope.info.created;
+        $scope.created = new Date($scope.info.created).toLocaleString();
         $scope.questions = $scope.info.questions || [];
     }, function (response) {
 

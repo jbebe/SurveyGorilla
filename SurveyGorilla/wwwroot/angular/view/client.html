@@ -1,10 +1,33 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+﻿<div class="col-md-12">
+    <h1>{{SurveyName}} - Survey Clients Site</h1>
+    <hr />
+    <h4>Add Client</h4>
+    <table class="table">
+        <tr>
+            <td>
+                <input type="text" class="form-control" ng-model="email" placeholder="email" required="" />
+            </td>
+            <td>
+                <input type="text" class="form-control" ng-model="name" placeholder="name" required="" />
+            </td>
+            <td>
+                <button class="btn btn-success" ng-click="newClient()">Add</button>
+            </td>
+        </tr>
+    </table>
+    <h4>Clients</h4>
+    <table class="table table-hover">
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="client in clients">
+            <td>{{ client.email }}</td>
+            <td>{{ client.info.name }}</td>
+            <td><a class="btn btn-success" href="#!/survey/{{client.id}}">Edit</a></td>
+            <td><button class="btn btn-danger" ng-click="deleteClient(client.id)">Delete</button></td>
+        </tr>
+    </table>
+</div>
