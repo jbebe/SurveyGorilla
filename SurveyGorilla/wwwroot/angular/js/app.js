@@ -51,7 +51,7 @@ app.run(function ($rootScope, $location, $cookies, LoginService) {
         LoginService.auth();
         $location.path("/survey");
     }else if (!LoginService.isAuthenticated()) {
-        $location.path("/login");
+        $location.path("/home");
     }
 });
 
