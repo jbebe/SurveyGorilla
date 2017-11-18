@@ -47,7 +47,7 @@ app.run(function ($rootScope, $location, $cookies, LoginService) {
         }                
     });
     
-    if ($cookies.get('.AspNetCore.Session')) {
+    if ($cookies.get('session_id')) {
         LoginService.auth();
         $location.path("/survey");
     }else if (!LoginService.isAuthenticated()) {
