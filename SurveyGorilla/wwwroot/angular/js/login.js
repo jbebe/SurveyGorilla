@@ -7,7 +7,7 @@
             $scope.username = '';
             $scope.password = '';
 
-            $location.path("/home");
+            $location.path("/survey");
         }
 
         function onError() {

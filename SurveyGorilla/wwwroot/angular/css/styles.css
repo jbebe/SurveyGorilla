@@ -1,9 +1,51 @@
-.login-link{
-    color: #5cb85c;
-    margin-left:20px;
+.login-link {
+    color: black;
+    margin-left: 20px;
 }
 
-.login-link:hover {
-    color: #5cb85c;
+    .login-link:hover {
+        color: black;
+        margin-left: 20px;
+    }
+body {
+    background-color: #5db9f0;
+}
+
+.home {
+    background-color: #5db9f0;
+    min-height: 100vh;
+    color: white;
+}
+
+.ng-main-view {
+    margin-top: -20px;
+}
+
+.welcome {
     margin-left: 20px;
+}
+
+.tablecontainer {
+    width: 80%;
+    text-align: center;
+    margin: auto;
+}
+
+.homeimg {
+    max-width: 30vw;
+    vertical-align: middle;
+}
+
+.homeul {
+    list-style-position: inside;
+}
+
+.welcome {
+    width: 80%;
+    text-align: center;
+    margin: auto;
+}
+
+.borderless td, .borderless th {
+    border: none !important;
 }
