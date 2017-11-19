@@ -39,13 +39,14 @@ namespace SurveyGorilla.Controllers
         /// <returns>admin entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Unsuccessful</response>
+        [Consumes("application/json")]
         [Produces("application/json")]
         [HttpPost("Register")]
-        public IActionResult Register([FromBody] AdminData data)
+        public IActionResult Register([FromBody] AdminData adminData)
         {
             try
             {
-                return Ok(_logic.Register(data));
+                return Ok(_logic.Register(adminData));
             }
             catch (Exception e)
             {
@@ -62,13 +63,14 @@ namespace SurveyGorilla.Controllers
         /// <returns>Admin entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Could not log in with the credentials</response>
+        [Consumes("application/json")]
         [Produces("application/json")]
         [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginData data)
+        public IActionResult Login([FromBody] LoginData adminData)
         {
             try
             {
-                return Ok(_logic.Login(HttpContext.Session, data));
+                return Ok(_logic.Login(HttpContext.Session, adminData));
             }
             catch (Exception e)
             {
