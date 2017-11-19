@@ -26,7 +26,7 @@
         <tr ng-repeat="client in clients">
             <td>{{ client.email }}</td>
             <td>{{ client.info.name }}</td>
-            <td><a class="btn btn-success" href="#!/survey/{{client.id}}">Edit</a></td>
+            <td><a class="btn btn-success" href="#!/survey/{{surveyid}}/client/{{client.id}}">Edit</a></td>
             <td><button class="btn btn-danger" ng-click="deleteClient(client.id)">Delete</button></td>
         </tr>
     </table>

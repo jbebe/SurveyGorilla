@@ -10,7 +10,7 @@
         ClientService.create($scope.surveyid,data, $http);
     }
     $scope.deleteClient = function (id) {
-        if (confirm("Delete Survey?")) {
+        if (confirm("Delete Client?")) {
             ClientService.delete($scope.surveyid,id, $http);
         }
     }
