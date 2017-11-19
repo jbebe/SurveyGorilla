@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -36,19 +37,21 @@ namespace SurveyGorilla.Logic
         
         public SendGrid.Response SendToAllSurveyMembers(int adminId, int surveyId)
         {
-            var survey = _context.Surveys.Single(s => s.Id == surveyId && s.AdminId == adminId);
-            var clients = _context.Clients.Where(c => c.SurveyId == surveyId).ToList();
+            var survey = _context.Surveys
+                .Include(s => s.Admin)
+                .Include(s => s.Clients)
+                .Single(s => s.Id == surveyId && s.AdminId == adminId);
             var surveyInfo = survey.Info.ToObject();
             var surveyStart = surveyInfo.SelectToken("availability").Value<DateTime>("start");
             var surveyEnd = surveyInfo.SelectToken("availability").Value<DateTime>("end");
             var from = _noreplyAddr;
-            var tos = clients
+            var tos = survey.Clients
                 .Select(c => {
                     var name = c.Info.ToObject().Value<string>("name");
                     return new EmailAddress(c.Email, name);
                 })
                 .ToList();
-            var subjects = clients.Select(c => 
+            var subjects = survey.Clients.Select(c => 
                 $"Incoming survey from {c.Survey.Admin.Info.ToObject().Value<string>("name")} @surveygorilla.com").ToList();
             var link = $"{_Request.Scheme }://{_Request.Host}{_Request.PathBase}/survey";
             var htmlContent =
@@ -57,7 +60,7 @@ namespace SurveyGorilla.Logic
                 $"Access the survey here:<br>" +
                 $"<a href=\"-tokenLink-\">-tokenLink-</a><br>" +
                 $"Your name: -clientName-";
-            var substitutions = clients.Select(c => new Dictionary<string, string>
+            var substitutions = survey.Clients.Select(c => new Dictionary<string, string>
             {
                 { "surveyName", c.Survey.Name },
                 { "surveyStart", surveyStart.ToString() },
@@ -73,7 +76,10 @@ namespace SurveyGorilla.Logic
 
         public SendGrid.Response SendToSurveyMember(int adminId, int surveyId, int clientId)
         {
-            var client = _context.Clients.Single(c => c.Id == clientId && c.SurveyId == surveyId && c.Survey.AdminId == adminId);
+            var client = _context.Clients
+                .Include(c => c.Survey)
+                .ThenInclude(s => s.Admin)
+                .Single(c => c.Id == clientId && c.SurveyId == surveyId && c.Survey.AdminId == adminId);
             dynamic surveyInfo = client.Survey.Info.ToObject();
             dynamic availability = surveyInfo.availability;
             var surveyStart = JsonConvert.DeserializeObject<DateTime>(availability.start);

@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using SurveyGorilla.Misc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace SurveyGorilla.Logic
 {
@@ -25,7 +26,7 @@ namespace SurveyGorilla.Logic
 
         public ClientEntity GetClient(int adminId, int surveyId, int clientId)
         {
-            return _context.Clients.Single(client =>
+            return _context.Clients.Include(c => c.Survey).Single(client =>
                 client.Survey.AdminId == adminId &&
                 client.SurveyId == surveyId &&
                 client.Id == clientId
@@ -72,11 +73,11 @@ namespace SurveyGorilla.Logic
             {
                 var oldInfo = JObject.Parse(client.Info);
                 var newInfo = JObject.Parse(clientData.Info);
-                newInfo.Merge(oldInfo, new JsonMergeSettings
+                oldInfo.Merge(newInfo, new JsonMergeSettings
                 {
                     MergeArrayHandling = MergeArrayHandling.Union
                 });
-                client.Info = newInfo.ToString(Formatting.None);
+                client.Info = oldInfo.ToString(Formatting.None);
             }
 
             _context.SaveChanges();
@@ -92,11 +93,11 @@ namespace SurveyGorilla.Logic
             var client = _context.Clients.Single(c => c.Token == token);
             var oldInfo = JObject.Parse(client.Info);
             var newInfo = JObject.Parse(clientData.Info);
-            newInfo.Merge(oldInfo, new JsonMergeSettings
+            oldInfo.Merge(newInfo, new JsonMergeSettings
             {
                 MergeArrayHandling = MergeArrayHandling.Union
             });
-            client.Info = newInfo.ToString(Formatting.None);
+            client.Info = oldInfo.ToString(Formatting.None);
             _context.SaveChanges();
             return client;
         }
@@ -107,7 +108,7 @@ namespace SurveyGorilla.Logic
             {
                 throw new Exception("Token is missing from path!");
             }
-            var client = _context.Clients.Single(c => c.Token == token);
+            var client = _context.Clients.Include(c => c.Survey).Single(c => c.Token == token);
             dynamic surveyInfoObj = client.Survey.Info.ToObject();
             dynamic availability = surveyInfoObj.availability;
             var surveyStart = JsonConvert.DeserializeObject<DateTime>(availability.start);

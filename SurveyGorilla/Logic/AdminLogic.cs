@@ -18,16 +18,16 @@ namespace SurveyGorilla.Logic
             _context = context;
         }
 
-        public AdminEntity CreateAdmin(AdminData data)
+        public AdminEntity CreateAdmin(AdminData adminData)
         {
             var admin = new AdminEntity();
             var adminInfo = new { registered = DateTime.UtcNow };
-            if (new[] { data.Email, data.Info, data.Password }.Any(entry => entry == null))
+            if (new[] { adminData.Email, adminData.Info, adminData.Password }.Any(entry => entry == null))
             {
                 throw new Exception("Important properties were not filled!");
             }
-            admin.Email = data.Email;
-            admin.PasswordHash = Crypto.Sha256(data.Password);
+            admin.Email = adminData.Email;
+            admin.PasswordHash = Crypto.Sha256(adminData.Password);
             admin.Info = JsonConvert.SerializeObject(adminInfo);
             _context.Add(admin);
             _context.SaveChanges();
@@ -60,11 +60,11 @@ namespace SurveyGorilla.Logic
             {
                 var oldInfo = JObject.Parse(admin.Info);
                 var newInfo = JObject.Parse(adminData.Info);
-                newInfo.Merge(oldInfo, new JsonMergeSettings
+                oldInfo.Merge(newInfo, new JsonMergeSettings
                 {
                     MergeArrayHandling = MergeArrayHandling.Union
                 });
-                admin.Info = newInfo.ToString(Formatting.None);
+                admin.Info = oldInfo.ToString(Formatting.None);
             }
 
             _context.SaveChanges();
