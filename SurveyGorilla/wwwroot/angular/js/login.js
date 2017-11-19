@@ -17,7 +17,7 @@
         LoginService.login({
             "email": $scope.email,
             "password": $scope.password,
-            "info": {}
+            "info": "{}"
         }, $http, onSuccess, onError);
 
     };
@@ -42,7 +42,7 @@ app.controller('RegistrationController', function ($scope, $rootScope, $http, $l
             $scope.username = '';
             $scope.password = '';
 
-            $location.path("/home");
+            $location.path("/survey");
         }
 
         function onError() {
@@ -52,7 +52,7 @@ app.controller('RegistrationController', function ($scope, $rootScope, $http, $l
         LoginService.register({
             "email": $scope.email,
             "password": $scope.password,
-            "info": {}
+            "info": "{}"
         }, $http, onSuccess, onError);
 
     };
