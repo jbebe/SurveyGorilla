@@ -47,7 +47,7 @@ namespace SurveyGorilla.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return NotFound(e);
             }
         }
 
@@ -70,7 +70,7 @@ namespace SurveyGorilla.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return NotFound(e);
             }
         }
 
@@ -93,7 +93,7 @@ namespace SurveyGorilla.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return NotFound(e);
             }
         }
 
@@ -116,7 +116,7 @@ namespace SurveyGorilla.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return NotFound(e);
             }
         }
 
@@ -139,7 +139,7 @@ namespace SurveyGorilla.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return NotFound(e);
             }
         }
 

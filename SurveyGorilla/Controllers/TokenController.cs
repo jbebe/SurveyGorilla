@@ -49,10 +49,13 @@ namespace SurveyGorilla.Controllers
         /// This method updates the client with its answers.
         /// If the user re-take the survey, the answers will be updated.
         /// </remarks>
-        /// <param name="token">The token for the client</param>
+        /// <param name="token">Token for the client</param>
+        /// <param name="clientData">Questions filled in info property</param>
         /// <returns>The updated client entity</returns>
         /// <response code="200">Successful</response>
         /// <response code="400">Unsuccessful</response>
+        [Consumes("application/json")]
+        [Produces("application/json")]
         [HttpPut("{token}")]
         public IActionResult ReceiveAnswers([FromRoute] string token, [FromBody] ClientData clientData)
         {

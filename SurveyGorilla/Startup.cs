@@ -22,6 +22,7 @@ namespace SurveyGorilla
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            MailLogic.SendGridApiKey = Configuration["SendGrid:ApiKey"];
         }
 
         public IConfiguration Configuration { get; }

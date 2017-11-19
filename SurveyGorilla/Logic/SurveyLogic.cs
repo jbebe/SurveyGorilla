@@ -37,13 +37,13 @@ namespace SurveyGorilla.Logic
             }
             if (surveyData.Info != null)
             {
-                var dbInfo = JObject.Parse(survey.Info);
+                var oldInfo = JObject.Parse(survey.Info);
                 var newInfo = JObject.Parse(surveyData.Info);
-                newInfo.Merge(dbInfo, new JsonMergeSettings
+                newInfo.Merge(oldInfo, new JsonMergeSettings
                 {
-                    MergeArrayHandling = MergeArrayHandling.Concat
+                    MergeArrayHandling = MergeArrayHandling.Union
                 });
-                survey.Info = newInfo.ToString();
+                survey.Info = newInfo.ToString(Formatting.None);
             }
             _context.SaveChanges();
             return survey;

@@ -74,6 +74,7 @@ namespace SurveyGorilla.Controllers
         /// <summary>Creates a new survey</summary>
         /// <remarks>
         /// You have to be logged in as admin, to access this endpoint!
+        /// availability.start/end should have this value: (new Date()).toISOString().replace(/T/g,' ').substring(0,19)
         /// </remarks>
         /// <param name="surveyData">Partially filled survey data</param>
         /// <returns>Survey entity</returns>

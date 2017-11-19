@@ -39,9 +39,14 @@ namespace SurveyGorilla.Logic
             {
                 throw new Exception("Important properties were not filled!");
             }
+            if (!_context.Surveys.Any(s => s.Id == surveyId && s.AdminId == adminId))
+            {
+                throw new Exception("This survey does not belong to current admin!");
+            }
             client.Email = clientData.Email;
             client.Info = clientData.Info;
             client.SurveyId = surveyId;
+            client.Token = Crypto.Sha256($"{client.Email}{adminId}{surveyId}");
             _context.Add(client);
             _context.SaveChanges();
             return client;
@@ -69,9 +74,9 @@ namespace SurveyGorilla.Logic
                 var newInfo = JObject.Parse(clientData.Info);
                 newInfo.Merge(oldInfo, new JsonMergeSettings
                 {
-                    MergeArrayHandling = MergeArrayHandling.Concat
+                    MergeArrayHandling = MergeArrayHandling.Union
                 });
-                client.Info = newInfo.ToString();
+                client.Info = newInfo.ToString(Formatting.None);
             }
 
             _context.SaveChanges();
@@ -89,9 +94,9 @@ namespace SurveyGorilla.Logic
             var newInfo = JObject.Parse(clientData.Info);
             newInfo.Merge(oldInfo, new JsonMergeSettings
             {
-                MergeArrayHandling = MergeArrayHandling.Concat
+                MergeArrayHandling = MergeArrayHandling.Union
             });
-            client.Info = newInfo.ToString();
+            client.Info = newInfo.ToString(Formatting.None);
             _context.SaveChanges();
             return client;
         }
