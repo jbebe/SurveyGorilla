@@ -20,9 +20,9 @@ namespace SurveyGorilla.Models
                 .WithOne(survey => survey.Admin)
                 .HasForeignKey(s => s.AdminId);
 
-            // Admin.EmailAddress is unique
+            // Admin.Email is unique
             modelBuilder.Entity<AdminEntity>()
-                .HasIndex(admin => admin.EmailAddress)
+                .HasIndex(admin => admin.Email)
                 .IsUnique();
 
             // Survey --> Admin
@@ -43,9 +43,9 @@ namespace SurveyGorilla.Models
                 .WithMany(survey => survey.Clients)
                 .HasForeignKey(client => client.SurveyId);
 
-            // (Client.EmailAddress + Client.SurveyId) is unique
+            // (Client.Email + Client.SurveyId) is unique
             modelBuilder.Entity<ClientEntity>()
-                .HasIndex(client => new { client.EmailAddress, client.SurveyId })
+                .HasIndex(client => new { client.Email, client.SurveyId })
                 .IsUnique();
         }
 

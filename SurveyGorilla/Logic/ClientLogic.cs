@@ -39,7 +39,7 @@ namespace SurveyGorilla.Logic
             {
                 throw new Exception("Important properties were not filled!");
             }
-            client.EmailAddress = clientData.Email;
+            client.Email = clientData.Email;
             client.Info = clientData.Info;
             client.SurveyId = surveyId;
             _context.Add(client);
@@ -61,7 +61,7 @@ namespace SurveyGorilla.Logic
 
             if (clientData.Email != null)
             {
-                client.EmailAddress = clientData.Email;
+                client.Email = clientData.Email;
             }
             if (clientData.Info != null)
             {

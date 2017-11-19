@@ -19,7 +19,7 @@ namespace SurveyGorilla.Models
         public int SurveyId { get; set; }
 
         [Required]
-        public string EmailAddress { get; set; }
+        public string Email { get; set; }
 
         public string Token { get; set; }
 

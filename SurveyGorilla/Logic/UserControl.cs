@@ -26,7 +26,7 @@ namespace SurveyGorilla.Logic
         public AdminEntity Login(ISession session, LoginData data)
         {
             var admin = _context.Admins.First(a => 
-                a.EmailAddress == data.Email && 
+                a.Email == data.Email && 
                 a.PasswordHash == Crypto.Sha256(data.Password)
             );
             session.SetInt32(Session.adminId, admin.Id);

@@ -25,7 +25,7 @@ namespace SurveyGorilla.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("EmailAddress")
+                    b.Property<string>("Email")
                         .IsRequired();
 
                     b.Property<string>("Info")
@@ -36,7 +36,7 @@ namespace SurveyGorilla.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailAddress")
+                    b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("Admins");
@@ -47,7 +47,7 @@ namespace SurveyGorilla.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("EmailAddress")
+                    b.Property<string>("Email")
                         .IsRequired();
 
                     b.Property<string>("Info")
@@ -61,7 +61,7 @@ namespace SurveyGorilla.Migrations
 
                     b.HasIndex("SurveyId");
 
-                    b.HasIndex("EmailAddress", "SurveyId")
+                    b.HasIndex("Email", "SurveyId")
                         .IsUnique();
 
                     b.ToTable("Clients");

@@ -26,7 +26,7 @@ namespace SurveyGorilla.Logic
             {
                 throw new Exception("Important properties were not filled!");
             }
-            admin.EmailAddress = data.Email;
+            admin.Email = data.Email;
             admin.PasswordHash = Crypto.Sha256(data.Password);
             admin.Info = JsonConvert.SerializeObject(adminInfo);
             _context.Add(admin);
@@ -50,7 +50,7 @@ namespace SurveyGorilla.Logic
 
             if (adminData.Email != null)
             {
-                admin.EmailAddress = adminData.Email;
+                admin.Email = adminData.Email;
             }
             if (adminData.Password != null)
             {

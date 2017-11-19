@@ -15,7 +15,7 @@ namespace SurveyGorilla.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -51,7 +51,7 @@ namespace SurveyGorilla.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SurveyId = table.Column<int>(type: "int", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -68,9 +68,9 @@ namespace SurveyGorilla.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Admins_EmailAddress",
+                name: "IX_Admins_Email",
                 table: "Admins",
-                column: "EmailAddress",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -79,9 +79,9 @@ namespace SurveyGorilla.Migrations
                 column: "SurveyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_EmailAddress_SurveyId",
+                name: "IX_Clients_Email_SurveyId",
                 table: "Clients",
-                columns: new[] { "EmailAddress", "SurveyId" },
+                columns: new[] { "Email", "SurveyId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
