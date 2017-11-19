@@ -58,13 +58,7 @@ namespace SurveyGorilla.Logic
             }
             if (adminData.Info != null)
             {
-                var oldInfo = JObject.Parse(admin.Info);
-                var newInfo = JObject.Parse(adminData.Info);
-                oldInfo.Merge(newInfo, new JsonMergeSettings
-                {
-                    MergeArrayHandling = MergeArrayHandling.Union
-                });
-                admin.Info = oldInfo.ToString(Formatting.None);
+                admin.Info = adminData.Info;
             }
 
             _context.SaveChanges();

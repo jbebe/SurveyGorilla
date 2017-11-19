@@ -71,13 +71,7 @@ namespace SurveyGorilla.Logic
             }
             if (clientData.Info != null)
             {
-                var oldInfo = JObject.Parse(client.Info);
-                var newInfo = JObject.Parse(clientData.Info);
-                oldInfo.Merge(newInfo, new JsonMergeSettings
-                {
-                    MergeArrayHandling = MergeArrayHandling.Union
-                });
-                client.Info = oldInfo.ToString(Formatting.None);
+                client.Info = clientData.Info;
             }
 
             _context.SaveChanges();
@@ -91,13 +85,8 @@ namespace SurveyGorilla.Logic
                 return null;
             }
             var client = _context.Clients.Single(c => c.Token == token);
-            var oldInfo = JObject.Parse(client.Info);
-            var newInfo = JObject.Parse(clientData.Info);
-            oldInfo.Merge(newInfo, new JsonMergeSettings
-            {
-                MergeArrayHandling = MergeArrayHandling.Union
-            });
-            client.Info = oldInfo.ToString(Formatting.None);
+            client.Info = clientData.Info;
+
             _context.SaveChanges();
             return client;
         }

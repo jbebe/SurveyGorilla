@@ -37,14 +37,9 @@ namespace SurveyGorilla.Logic
             }
             if (surveyData.Info != null)
             {
-                var oldInfo = JObject.Parse(survey.Info);
-                var newInfo = JObject.Parse(surveyData.Info);
-                oldInfo.Merge(newInfo, new JsonMergeSettings
-                {
-                    MergeArrayHandling = MergeArrayHandling.Union
-                });
-                survey.Info = oldInfo.ToString(Formatting.None);
+                survey.Info = surveyData.Info;
             }
+
             _context.SaveChanges();
             return survey;
         }
@@ -63,6 +58,7 @@ namespace SurveyGorilla.Logic
             };
             survey.Info = surveyInfo.ToJson();
             _context.Surveys.Add(survey);
+
             _context.SaveChanges();
             return survey;
         }
@@ -71,6 +67,7 @@ namespace SurveyGorilla.Logic
         {
             var surveyEntity = GetSurvey(adminId, surveyId);
             _context.Surveys.Remove(surveyEntity);
+
             _context.SaveChanges();
             return surveyEntity;
         }
