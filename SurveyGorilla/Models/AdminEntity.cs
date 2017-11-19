@@ -10,6 +10,11 @@ namespace SurveyGorilla.Models
 {
     public class AdminEntity
     {
+        public AdminEntity()
+        {
+            Surveys = new List<SurveyEntity>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -23,6 +28,6 @@ namespace SurveyGorilla.Models
         public string Info { get; set; }
 
         [IgnoreDataMember]
-        public IEnumerable<SurveyEntity> Surveys { get; set; }
+        public List<SurveyEntity> Surveys { get; set; }
     }
 }

@@ -13,8 +13,7 @@ namespace SurveyGorilla.Models
         [Key]
         [Required]
         public int Id { get; set; }
-        
-        [ForeignKey("Survey")]
+
         [Required]
         public int SurveyId { get; set; }
 

@@ -11,7 +11,7 @@ using System;
 namespace SurveyGorilla.Migrations
 {
     [DbContext(typeof(SurveyContext))]
-    [Migration("20171119105600_InitialCreate")]
+    [Migration("20171119172224_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,9 @@ namespace SurveyGorilla.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdminId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Surveys");
                 });

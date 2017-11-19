@@ -39,11 +39,11 @@ namespace SurveyGorilla.Logic
             {
                 var oldInfo = JObject.Parse(survey.Info);
                 var newInfo = JObject.Parse(surveyData.Info);
-                newInfo.Merge(oldInfo, new JsonMergeSettings
+                oldInfo.Merge(newInfo, new JsonMergeSettings
                 {
                     MergeArrayHandling = MergeArrayHandling.Union
                 });
-                survey.Info = newInfo.ToString(Formatting.None);
+                survey.Info = oldInfo.ToString(Formatting.None);
             }
             _context.SaveChanges();
             return survey;

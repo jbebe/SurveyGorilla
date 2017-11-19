@@ -37,13 +37,15 @@ namespace SurveyGorilla.Logic
         public SendGrid.Response SendToAllSurveyMembers(int adminId, int surveyId)
         {
             var survey = _context.Surveys.Single(s => s.Id == surveyId && s.AdminId == adminId);
-            dynamic surveyInfo = survey.Info.ToObject();
-            dynamic availability = surveyInfo.availability;
-            var surveyStart = JsonConvert.DeserializeObject<DateTime>(availability.start);
-            var surveyEnd = JsonConvert.DeserializeObject<DateTime>(availability.end);
+            var surveyInfo = survey.Info.ToObject();
+            var surveyStart = surveyInfo.SelectToken("availability").Value<DateTime>("start");
+            var surveyEnd = surveyInfo.SelectToken("availability").Value<DateTime>("end");
             var from = _noreplyAddr;
             var tos = survey.Clients
-                .Select(c => new EmailAddress(c.Email, c.Info.ToObject().Value<string>("name")))
+                .Select(c => {
+                    var name = c.Info.ToObject().Value<string>("name");
+                    return new EmailAddress(c.Email, name);
+                })
                 .ToList();
             var subjects = survey.Clients.Select(c => 
                 $"Incoming survey from {c.Survey.Admin.Info.ToObject().Value<string>("name")} @surveygorilla.com").ToList();
@@ -57,8 +59,8 @@ namespace SurveyGorilla.Logic
             var substitutions = survey.Clients.Select(c => new Dictionary<string, string>
             {
                 { "surveyName", c.Survey.Name },
-                { "surveyStart", surveyStart },
-                { "surveyEnd", surveyEnd },
+                { "surveyStart", surveyStart.ToString() },
+                { "surveyEnd", surveyEnd.ToString() },
                 { "tokenLink", $"{link}/{c.Token}" },
                 { "clientName", c.Info.ToObject().Value<string>("name") },
             }).ToList();

@@ -32,7 +32,7 @@ namespace SurveyGorilla.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AdminId = table.Column<int>(type: "int", nullable: false),
                     Info = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,6 +88,12 @@ namespace SurveyGorilla.Migrations
                 name: "IX_Surveys_AdminId",
                 table: "Surveys",
                 column: "AdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Surveys_Name",
+                table: "Surveys",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -14,34 +14,47 @@ namespace SurveyGorilla.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Admin --> Survey[]
+            modelBuilder.Entity<AdminEntity>().HasKey(a => a.Id);
+            modelBuilder.Entity<SurveyEntity>().HasKey(s => s.Id);
+            modelBuilder.Entity<ClientEntity>().HasKey(c => c.Id);
+
+            // Admin.Survey => []
             modelBuilder.Entity<AdminEntity>()
-                .HasMany(admin => admin.Surveys)
-                .WithOne(survey => survey.Admin)
-                .HasForeignKey(s => s.AdminId);
+                .HasMany<SurveyEntity>(a => a.Surveys)
+                .WithOne(s => s.Admin)
+                .HasForeignKey(s => s.AdminId)
+                .HasPrincipalKey(a => a.Id);
+
+            // Survey.Admin => Admin
+            modelBuilder.Entity<SurveyEntity>()
+                .HasOne<AdminEntity>(s => s.Admin)
+                .WithMany(a => a.Surveys)
+                .HasForeignKey(s => s.AdminId)
+                .HasPrincipalKey(a => a.Id);
+
+            // Survey.Clients => []
+            modelBuilder.Entity<SurveyEntity>()
+                .HasMany<ClientEntity>(s => s.Clients)
+                .WithOne(c => c.Survey)
+                .HasForeignKey(c => c.SurveyId)
+                .HasPrincipalKey(s => s.Id);
+
+            // Client.Survey => Survey
+            modelBuilder.Entity<ClientEntity>()
+                .HasOne<SurveyEntity>(c => c.Survey)
+                .WithMany(s => s.Clients)
+                .HasForeignKey(c => c.SurveyId)
+                .HasPrincipalKey(s => s.Id);
 
             // Admin.Email is unique
             modelBuilder.Entity<AdminEntity>()
                 .HasIndex(admin => admin.Email)
                 .IsUnique();
 
-            // Survey --> Admin
+            // Survey.Name is unique
             modelBuilder.Entity<SurveyEntity>()
-                .HasOne(survey => survey.Admin)
-                .WithMany(admin => admin.Surveys)
-                .HasForeignKey(r => r.AdminId);
-
-            // Survey --> Client[]
-            modelBuilder.Entity<SurveyEntity>()
-                .HasMany(survey => survey.Clients)
-                .WithOne(client => client.Survey)
-                .HasForeignKey(client => client.SurveyId);
-
-            // Client --> Survey
-            modelBuilder.Entity<ClientEntity>()
-                .HasOne(client => client.Survey)
-                .WithMany(survey => survey.Clients)
-                .HasForeignKey(client => client.SurveyId);
+                .HasIndex(survey => survey.Name)
+                .IsUnique();
 
             // (Client.Email + Client.SurveyId) is unique
             modelBuilder.Entity<ClientEntity>()

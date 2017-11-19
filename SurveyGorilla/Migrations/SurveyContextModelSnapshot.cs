@@ -84,6 +84,9 @@ namespace SurveyGorilla.Migrations
 
                     b.HasIndex("AdminId");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Surveys");
                 });
 

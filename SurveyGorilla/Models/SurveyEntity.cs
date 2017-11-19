@@ -10,11 +10,15 @@ namespace SurveyGorilla.Models
 {
     public class SurveyEntity
     {
+        public SurveyEntity()
+        {
+            Clients = new List<ClientEntity>();
+        }
+
         [Key]
         [Required]
         public int Id { get; set; }
 
-        [ForeignKey("Admin")]
         [Required]
         public int AdminId { get; set; }
 
@@ -28,6 +32,6 @@ namespace SurveyGorilla.Models
         public AdminEntity Admin { get; set; }
 
         [IgnoreDataMember]
-        public IEnumerable<ClientEntity> Clients { get; set; }
+        public List<ClientEntity> Clients { get; set; }
     }
 }
