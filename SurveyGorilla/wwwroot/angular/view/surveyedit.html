@@ -1,5 +1,5 @@
-﻿<div class="col-md-12">
-    <h1> {{name}} - Survey Editor</h1>
+﻿<div class="sitecontainer">
+    <h1> {{name}} - Questions</h1>
     <span>Created at {{created}}</span>
     <h4>Add Question</h4>
     <table class="table">
@@ -20,10 +20,12 @@
         <tr>
             <th>Question</th>
             <th>Answer</th>
+            <th></th>
         </tr>
-        <tr ng-repeat="quest in questions">
+        <tr ng-repeat="(index, quest) in questions">
             <td>{{quest.question}}</td>
             <td>{{quest.answer}}</td>
+            <td><button class="btn btn-danger" ng-click="removeQuestion(index)">Delete</button></td>
         </tr>
     </table>
 </div>

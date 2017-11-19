@@ -1,16 +1,30 @@
 ﻿
-app.controller('SurveyController', function ($scope, $http, SurveyService) {
+app.controller('SurveyController', function ($scope, $http, $location, SurveyService) {
     $scope.newSurvey = function () {
         var data = {
             name: $scope.name,
             info: "{}",            
         }
-        SurveyService.create(data, $http);
+        SurveyService.create(data, $http, function () {
+            $scope.surveys.push(data);
+        });
     }
     $scope.deleteSurvey = function (id) {
         if (confirm("Delete Survey?")) {
-            SurveyService.delete(id, $http);
+            SurveyService.delete(id, $http, function () {
+                for (var i = 0; i < $scope.surveys.length; i++) {
+                    if ($scope.surveys[i].id == id) {
+                        $scope.surveys.splice(i, 1);
+                        break;
+                    }
+                }
+            });
         }
+    }
+
+    $scope.clientEditOpen = function (surveyid,name) {
+        window.SurveyName = name;
+        $location.path("/survey/"+surveyid+"/client");
     }
 
     SurveyService.list($http, function (response) {
@@ -30,17 +44,25 @@ app.controller('SurveyController', function ($scope, $http, SurveyService) {
 app.controller('SurveyEditController', function ($scope, $http, $routeParams, SurveyService) {
     $scope.id = $routeParams.id;
     $scope.addQuestion = function () {
-        
         $scope.questions.push({
             question: $scope.question,
             answer: $scope.answer
         });
-       
         $scope.info.questions = $scope.questions;
         $scope.survey.info = JSON.stringify($scope.info);
         SurveyService.update($scope.id,$scope.survey, $http);
     }
 
+    $scope.removeQuestion = function (id) {
+        var deleted = $scope.questions.splice(id, 1);
+        $scope.info.questions = $scope.questions;
+        $scope.survey.info = JSON.stringify($scope.info);
+        SurveyService.update($scope.id, $scope.survey, $http, function () {
+
+        }, function () {
+            $scope.questions.push(deleted);
+        });
+    }
 
     SurveyService.get($routeParams.id, $http, function (response) {
         $scope.survey = response.data;

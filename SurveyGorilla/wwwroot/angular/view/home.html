@@ -17,7 +17,8 @@
                                Free Email notifications&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </li>
                         </ul>
-                        <a class="btn btn-danger" href="#!/login">Login!</a>&nbsp;&nbsp;<a class="btn btn-danger" href="#!/register">Sing up!</a>
+                        <a ng-if="!LoginService.isAuthenticated()" class="btn btn-danger" href="#!/login">Login!</a>&nbsp;&nbsp;<a ng-if="!LoginService.isAuthenticated()" class="btn btn-danger" href="#!/register">Sing up!</a>
+                        <a ng-if="LoginService.isAuthenticated()" class="btn btn-danger" href="#!/survey">Create Survey!</a>
             </div>
             <div class="contdiv">
                 <br />

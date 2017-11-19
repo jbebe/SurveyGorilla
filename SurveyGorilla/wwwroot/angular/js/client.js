@@ -1,4 +1,5 @@
 ﻿app.controller('ClientController', function ($scope, $http, $routeParams, ClientService) {
+    $scope.SurveyName = window.SurveyName || "";
     $scope.surveyid = $routeParams.surveyid;
     $scope.newClient = function () {
         var data = {
@@ -7,11 +8,22 @@
                 name: $scope.name
             })
         }
-        ClientService.create($scope.surveyid,data, $http);
+        ClientService.create($scope.surveyid, data, $http, function () {
+
+            data.info = JSON.parse(data.info);
+            $scope.clients.push(data);
+        });
     }
     $scope.deleteClient = function (id) {
         if (confirm("Delete Client?")) {
-            ClientService.delete($scope.surveyid,id, $http);
+            ClientService.delete($scope.surveyid, id, $http, function () {
+                for (var i = 0; i < $scope.clients.length; i++) {
+                    if ($scope.clients[i].id == id) {
+                        $scope.clients.splice(i, 1);
+                        break;
+                    }
+                }
+            });
         }
     }
 
@@ -26,7 +38,7 @@
 });
 
 
-app.controller('ClientEditController', function ($scope, $http, $routeParams, ClientService) {
+app.controller('ClientEditController', function ($scope, $http, $routeParams, $location, ClientService) {
     $scope.surveyid = $routeParams.surveyid;
     $scope.id = $routeParams.id;
     $scope.editClient = function () {
@@ -36,7 +48,9 @@ app.controller('ClientEditController', function ($scope, $http, $routeParams, Cl
                 name: $scope.name
             })
         }
-        ClientService.update($scope.surveyid, $scope.id, data, $http);
+        ClientService.update($scope.surveyid, $scope.id, data, $http, function () {
+            $location.path("/survey/" + $scope.surveyid + "/client");
+        });
     }
 
     ClientService.get($scope.surveyid, $scope.id, $http, function (response) {
