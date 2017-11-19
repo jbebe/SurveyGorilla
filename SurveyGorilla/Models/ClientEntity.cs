@@ -26,6 +26,6 @@ namespace SurveyGorilla.Models
         public string Info { get; set; }
 
         [IgnoreDataMember]
-        public SurveyEntity Survey { get; set; }
+        public virtual SurveyEntity Survey { get; set; }
     }
 }

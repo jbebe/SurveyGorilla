@@ -11,7 +11,7 @@ using System;
 namespace SurveyGorilla.Migrations
 {
     [DbContext(typeof(SurveyContext))]
-    [Migration("20171119172224_InitialCreate")]
+    [Migration("20171119192114_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

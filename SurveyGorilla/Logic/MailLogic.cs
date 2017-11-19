@@ -37,17 +37,18 @@ namespace SurveyGorilla.Logic
         public SendGrid.Response SendToAllSurveyMembers(int adminId, int surveyId)
         {
             var survey = _context.Surveys.Single(s => s.Id == surveyId && s.AdminId == adminId);
+            var clients = _context.Clients.Where(c => c.SurveyId == surveyId).ToList();
             var surveyInfo = survey.Info.ToObject();
             var surveyStart = surveyInfo.SelectToken("availability").Value<DateTime>("start");
             var surveyEnd = surveyInfo.SelectToken("availability").Value<DateTime>("end");
             var from = _noreplyAddr;
-            var tos = survey.Clients
+            var tos = clients
                 .Select(c => {
                     var name = c.Info.ToObject().Value<string>("name");
                     return new EmailAddress(c.Email, name);
                 })
                 .ToList();
-            var subjects = survey.Clients.Select(c => 
+            var subjects = clients.Select(c => 
                 $"Incoming survey from {c.Survey.Admin.Info.ToObject().Value<string>("name")} @surveygorilla.com").ToList();
             var link = $"{_Request.Scheme }://{_Request.Host}{_Request.PathBase}/survey";
             var htmlContent =
@@ -56,7 +57,7 @@ namespace SurveyGorilla.Logic
                 $"Access the survey here:<br>" +
                 $"<a href=\"-tokenLink-\">-tokenLink-</a><br>" +
                 $"Your name: -clientName-";
-            var substitutions = survey.Clients.Select(c => new Dictionary<string, string>
+            var substitutions = clients.Select(c => new Dictionary<string, string>
             {
                 { "surveyName", c.Survey.Name },
                 { "surveyStart", surveyStart.ToString() },

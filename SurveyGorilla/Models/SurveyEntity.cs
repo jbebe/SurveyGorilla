@@ -29,9 +29,9 @@ namespace SurveyGorilla.Models
         public string Info { get; set; }
 
         [IgnoreDataMember]
-        public AdminEntity Admin { get; set; }
+        public virtual AdminEntity Admin { get; set; }
 
         [IgnoreDataMember]
-        public List<ClientEntity> Clients { get; set; }
+        public virtual List<ClientEntity> Clients { get; set; }
     }
 }
