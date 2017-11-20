@@ -32,7 +32,7 @@ namespace SurveyGorilla.Controllers
         /// <response code="200">Successful</response>
         /// <response code="400">Unsuccessful</response>
         [Produces("text/html")]
-        [HttpGet("{token}")]
+        [HttpGet("token/{token}")]
         public IActionResult GetPage([FromRoute] string token)
         {
             if (string.IsNullOrWhiteSpace(token))
@@ -56,18 +56,41 @@ namespace SurveyGorilla.Controllers
         /// <response code="400">Unsuccessful</response>
         [Consumes("application/json")]
         [Produces("application/json")]
-        [HttpPut("{token}")]
+        [HttpPut("send/{token}")]
         public IActionResult ReceiveAnswers([FromRoute] string token, [FromBody] ClientData clientData)
         {
             try
             {
-                return Ok(_logic.UpdateClientAnswers(token, clientData));
+                return Ok(_logic.UpdateClientByToken(token, clientData));
             }
             catch (Exception e)
             {
                 return NotFound(e);
             }   
         }
-        
+
+        /// <summary>Receives the survey answers</summary>
+        /// <remarks>
+        /// This method updates the client with its answers.
+        /// If the user re-take the survey, the answers will be updated.
+        /// </remarks>
+        /// <param name="token">Token for the client</param>
+        /// <returns>The updated client entity</returns>
+        /// <response code="200">Successful</response>
+        /// <response code="400">Unsuccessful</response>
+        [Produces("application/json")]
+        [HttpGet("info/{token}")]
+        public IActionResult SendInfo([FromRoute] string token)
+        {
+            try
+            {
+                return Ok(_logic.GetInfoByToken(token));
+            }
+            catch (Exception e)
+            {
+                return NotFound(e);
+            }
+        }
+
     }
 }

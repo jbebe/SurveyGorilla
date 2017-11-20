@@ -19,9 +19,16 @@ namespace SurveyGorilla
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.Secret.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.Development.json", optional: true);
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
+
             MailLogic.SendGridApiKey = Configuration["SendGrid:ApiKey"];
         }
 

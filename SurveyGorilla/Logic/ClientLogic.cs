@@ -78,7 +78,7 @@ namespace SurveyGorilla.Logic
             return client;
         }
 
-        public ClientEntity UpdateClientAnswers(string token, ClientData clientData)
+        public ClientEntity UpdateClientByToken(string token, ClientData clientData)
         {
             if (!IsTokenValid(token))
             {
@@ -110,6 +110,22 @@ namespace SurveyGorilla.Logic
             {
                 throw new ArgumentOutOfRangeException($"({currentGMT} >= {surveyStart} && {currentGMT} <= {surveyEnd}) is not ");
             }
+        }
+
+        public object GetInfoByToken(string token)
+        {
+            var client = _context.Clients
+                .Include(c => c.Survey)
+                .ThenInclude(s => s.Admin)
+                .Single(c => c.Token == token);
+            return new
+            {
+                adminName = client.Survey.Admin.Info.ToObject().Value<string>("name"),
+                surveyName = client.Survey.Name,
+                surveyStart = client.Survey.Info.ToObject()["availability"].Value<string>("start"),
+                surveyEnd = client.Survey.Info.ToObject()["availability"].Value<string>("end"),
+                questions = client.Survey.Info.ToObject()["questions"].ToString(Formatting.None)
+            };
         }
     }
 }
