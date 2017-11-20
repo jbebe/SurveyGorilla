@@ -307,3 +307,4 @@ OpenCover/
 SurveyGorilla/wwwroot/lib/**
 SurveyGorilla/bower_components/**
 **/yarn.lock
+SurveyGorilla/appsettings.Secret.json

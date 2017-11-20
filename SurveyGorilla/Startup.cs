@@ -29,7 +29,7 @@ namespace SurveyGorilla
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            MailLogic.SendGridApiKey = Configuration["SendGrid:ApiKey"];
+            MailLogic.SendGridApiKey = Configuration["SendGridApiKey"];
         }
 
         public IConfiguration Configuration { get; }
