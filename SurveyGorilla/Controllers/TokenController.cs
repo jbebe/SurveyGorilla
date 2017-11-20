@@ -37,7 +37,7 @@ namespace SurveyGorilla.Controllers
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                return File("~/token.html", "text/html");
+                return File("~/index.html", "text/html");
             } else
             {
                 return NotFound();

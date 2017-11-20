@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/jquery-router-plugin/jquery.router.js"></script>
+    <script src="/lib/js-cookie/src/js.cookie.js"></script>
+</head>
+<body>
+    <button onclick="LogoutAction.call(this, event);">Logout</button>
+    <div id="login-view" style="display:none;">
+        <h3>Login:</h3>
+        <form onsubmit="LoginAction.call(this, event)">
+            <label>
+                Email: <input type="email"/>
+            </label>
+            <label>
+                Password: <input type="password"/>
+            </label>
+            <input type="submit" value="Submit"/>
+        </form>
+        <button onclick="LoadView('register');">Register</button>
+    </div>
+    <div id="register-view" style="display:none;">
+        <h3>Register:</h3>
+        <form onsubmit="RegisterAction.call(this, event)">
+            <label>
+                Email: <input type="email" />
+            </label>
+            <label>
+                Password: <input type="password" />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <button onclick="LoadView('login');">Login</button>
+    </div>
+    <div id="survey-create-view" style="display:none;">
+        <h3>Survey Create:</h3>
+        <form onsubmit="CreateSurveyAction.call(this, event)">
+            <label>
+                Name: <input type="text" />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <button onclick="LoadView('survey-list');">Back to Survey List</button>
+    </div>
+    <div id="survey-list-view" style="display:none;">
+        <h3>Survey list:</h3>
+        <button onclick="LoadView('survey-create');">Create Survey</button>
+        <ul data-load="LoadSurveyList"></ul>
+        <button onclick="LoadView('login');">Back to Login</button>
+    </div>
+    <div id="survey-view" style="display:none;">
+        <h3>Survey:</h3>
+        <b>Survey Details:</b>
+        <ul data-load="LoadSurveyDetails"></ul>
+        <b>Survey Questions:</b>
+        <ul data-load="LoadSurveyQuestions"></ul>
+        <b>Survey Clients:</b>
+        <ul data-load="LoadSurveyClients"></ul>
+        <button onclick="LoadView('survey-list');">Back to Survey List</button>
+        <button onclick="LoadView('question-create');">Create Questions</button>
+        <button onclick="LoadView('client-create');">Create Client</button>
+    </div>
+    <div id="question-create-view" style="display:none;">
+        <h3>Question Create:</h3>
+        <form onsubmit="CreateQuestionAction.call(this, event)">
+            <label>
+                Question: <input type="text" />
+                Answer: <input type="text" />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <button onclick="LoadView('survey-list');">Back to Survey List</button>
+    </div>
+    <div id="client-create-view" style="display:none;">
+        <h3>Client Create:</h3>
+        <form onsubmit="CreateClientAction.call(this, event)">
+            <label>
+                Name: <input type="text" />
+                Email: <input type="email" />
+            </label>
+            <input type="submit" value="Submit" />
+        </form>
+        <button onclick="LoadView('survey-list');">Back to Survey List</button>
+    </div>
+    <pre id="message-log"></pre>
+    <script src="/js/index.js"></script>
+</body>
+</html>
