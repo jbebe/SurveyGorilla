@@ -5,7 +5,7 @@
     <table  class="table">
         <tr>
             <td>
-                <input type="text" class="form-control" ng-model="name" placeholder="name" required="" />
+                <input type="text" class="form-control" ng-model="NewSurveyName" placeholder="name" required="" />
             </td>
             <td>
                 <button class="btn btn-success" ng-click="newSurvey()">Create</button>
@@ -22,11 +22,11 @@
             <th>Answers</th>
             <th></th>
         </tr>
-        <tr ng-repeat="survey in surveys">          
+        <tr ng-repeat="survey in surveys" ng-click="splitView(survey)" style="cursor:pointer;">          
             <td>{{ survey.name }}</td>
             <td>{{ survey.info.created || "Now" }}</td>
             <td><a class="btn btn-success" href="#!/survey/{{survey.id}}"><b>?</b></a></td>
-            <td><button class="btn btn-success glyphicon glyphicon-user" ng-click="clientEditOpen(survey.id,survey.name)" ></button></td>
+            <td><button class="btn btn-success glyphicon glyphicon-user" ng-click="clientEditOpen(survey)" ></button></td>
             <td><button class="btn btn-success " ng-click="surveyResults(survey)"><img class="stats" src="img/stats.png"/></button></td>
             <td><button class="btn btn-danger" ng-click="deleteSurvey(survey.id)">Delete</button></td>
         </tr>

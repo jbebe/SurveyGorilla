@@ -67,3 +67,9 @@
 .stats{
    width:20px;
 }
+
+.splitview{
+    display:inline-block;
+    width:49%;
+    float:left;
+}

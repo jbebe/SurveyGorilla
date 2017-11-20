@@ -1,16 +1,13 @@
-﻿<div class="sitecontainer">
-    <h1> {{name}} - Questions</h1>
+﻿<div class="sitecontainer" ng-controller="SurveyEditController">
+    <h1> {{survey.name}} - Questions</h1>
     <span>Created at {{created}}</span>
     <h4>Add Question</h4>
     <table class="table">
         <tr>
             <td>
-                <input type="text" class="form-control" ng-model="question" placeholder="question" required="" />
+                <input type="text" class="form-control" ng-model="newQuestion" placeholder="question" required="" />
             </td>
-            <td>
-                <input type="text" class="form-control" ng-model="answer" placeholder="answer" required="" />
-            </td>
-            <td>
+        <td>
                 <button class="btn btn-success" ng-click="addQuestion()">Add</button>
             </td>
         </tr>

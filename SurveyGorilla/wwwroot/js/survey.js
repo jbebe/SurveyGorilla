@@ -2,11 +2,18 @@
 app.controller('SurveyController', function ($scope, $http, $location, SurveyService) {
     $scope.newSurvey = function () {
         var data = {
-            name: $scope.name,
-            info: "{}",            
+            name: $scope.NewSurveyName,
+            info: JSON.stringify({
+                availability: { 
+                    start: new Date().toJSON()
+                }
+            }),            
         }
-        SurveyService.create(data, $http, function () {
+        SurveyService.create(data, $http, function (response) {
             $scope.surveys.push(data);
+            response.data.info = JSON.parse(response.data.info);
+            SurveyService.addListed(response.data);
+            
         });
     }
     $scope.deleteSurvey = function (id) {
@@ -22,14 +29,19 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
         }
     }
 
-    $scope.clientEditOpen = function (surveyid,name) {
-        window.SurveyName = name;
-        $location.path("/survey/"+surveyid+"/client");
+    $scope.clientEditOpen = function (survey) {
+        SurveyService.setSurvey(survey);
+        $location.path("/survey/"+survey.id+"/client");
     }
 
     $scope.surveyResults = function (survey) {
-        window.survey = survey;
+        SurveyService.setSurvey(survey);
         $location.path("/survey/" + survey.id + "/results");
+    }
+
+    $scope.splitView = function (survey) {
+        SurveyService.setSurvey(survey);
+        $location.path("/splitview/" + survey.id);
     }
 
     SurveyService.list($http, function (response) {
@@ -38,6 +50,7 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
             $scope.surveys[i].info = JSON.parse($scope.surveys[i].info); 
             $scope.surveys[i].info.created = new Date($scope.surveys[i].info.created).toLocaleString()
         }
+        SurveyService.setListed($scope.surveys);
     }, function (response) {
 
     });
@@ -47,26 +60,28 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
 
 
 app.controller('SurveyEditController', function ($scope, $http, $routeParams, SurveyService) {
+    $scope.survey = SurveyService.getSurvey($routeParams.id);
     $scope.id = $routeParams.id;
     $scope.addQuestion = function () {
         $scope.questions.push({
-            question: $scope.question,
-            answer: $scope.answer
+            question: $scope.question
         });
         $scope.info.questions = $scope.questions;
-        $scope.survey.info = JSON.stringify($scope.info);
+        $scope.survey.info = angular.toJson($scope.info);
         SurveyService.update($scope.id,$scope.survey, $http);
     }
 
     $scope.removeQuestion = function (id) {
-        var deleted = $scope.questions.splice(id, 1);
-        $scope.info.questions = $scope.questions;
-        $scope.survey.info = JSON.stringify($scope.info);
-        SurveyService.update($scope.id, $scope.survey, $http, function () {
+        if (confirm("Delete Question?")) {
+            var deleted = $scope.questions.splice(id, 1);
+            $scope.info.questions = $scope.questions;
+            $scope.survey.info = angular.toJson($scope.info);
+            SurveyService.update($scope.id, $scope.survey, $http, function () {
 
-        }, function () {
-            $scope.questions.push(deleted);
-        });
+            }, function () {
+                $scope.questions.push(deleted);
+            });
+        }
     }
 
     SurveyService.get($routeParams.id, $http, function (response) {
@@ -83,6 +98,8 @@ app.controller('SurveyEditController', function ($scope, $http, $routeParams, Su
 
 
 app.factory('SurveyService', function () {
+    var selected = null;
+    var listed = null;
     return {
         get: function (id, $http, onSuccess, onError) {
             $http.get("/api/survey/" + id)
@@ -143,6 +160,27 @@ app.factory('SurveyService', function () {
                         onError(response);
                     }
                 })
+        },
+        getSurvey: function (id) {
+            if (selected && selected.id == id) {
+                return selected;
+            } else if (listed) {
+                for (var i = 0; i < listed.length; i++) {
+                    if (listed[i].id == id) {
+                        return listed[i];
+                    }
+                }
+            }
+            return null;
+        },
+        setSurvey: function (survey) {
+            selected = survey;
+        },
+        setListed: function (surveyList) {
+            listed = surveyList;
+        },
+        addListed: function (survey) {
+            listed.push(survey);
         }
     };
 });

@@ -1,10 +1,7 @@
 ﻿
-app.controller('SurveyResultsController', function ($scope, $location, $routeParams) {
+app.controller('SurveyResultsController', function ($scope, $location, $routeParams, SurveyService) {
+    $scope.survey = SurveyService.getSurvey($routeParams.id);
     $scope.surveyid = $routeParams.id;
-    $scope.survey = window.survey;
-    if (!$scope.survey || $scope.survey.id != $scope.surveyid) {
-        // TODO GET Survey FROM SERVER
-    }
 
     $scope.backToSurvey = function () {
         $location.path("/survey/" + $scope.surveyid);

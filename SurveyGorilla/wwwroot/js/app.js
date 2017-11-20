@@ -32,29 +32,31 @@ app.config(function ($routeProvider) {
         }).when('/questions/:token', {
             templateUrl: 'view/fillsurvey.html',
             controller: 'FillSurveyController'
+        }).when('/splitview/:id', {
+            templateUrl: 'view/splitview.html',
+            controller: 'SplitViewController'
         }).when('/survey/:surveyid/results', {
             templateUrl: 'view/surveyresults.html',
             controller: 'SurveyResultsController'
-        }).otherwise({ redirectTo: '/home' });
+        }).otherwise({ redirectTo: '/login' });
 });
 
 app.run(function ($rootScope, $location, $cookies, LoginService) {
     $rootScope.LoginService = LoginService;
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-        var notroute = ["register", "login", "logout", "home"];
+        var notroute = ["register", "login", "logout", "home", "questions"];
         var routepath = next.split("#!/")[1];
         if (notroute.indexOf(routepath) == -1) {
-            if (!LoginService.isAuthenticated()) {
+            if (!LoginService.isAuthenticated() || !$cookies.get('session_id')) {
                $location.path("/login");
             } 
         }                
     });
     
     if ($cookies.get('session_id')) {
-        LoginService.auth();
-        $location.path("/survey");
+        LoginService.auth();        
     }else if (!LoginService.isAuthenticated()) {
-        $location.path("/home");
+        $location.path("/login");
     }
 });
 
@@ -63,3 +65,10 @@ app.controller('HomeController', function ($rootScope, LoginService) {
    //TODO
 
 });
+
+app.controller('SplitViewController', function ($rootScope, $routeParams) {
+    window.surveyid = $routeParams.id;
+    
+});
+
+

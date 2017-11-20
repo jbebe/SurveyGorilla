@@ -1,10 +1,10 @@
-﻿app.controller('ClientController', function ($scope, $http, $routeParams, ClientService) {
-    $scope.SurveyName = window.SurveyName || "";
+﻿app.controller('ClientController', function ($scope, $http, $routeParams, ClientService, SurveyService) {
+    $scope.survey = SurveyService.getSurvey($routeParams.id);
     $scope.surveyid = $routeParams.surveyid;
     $scope.newClient = function () {
         var data = {
             email: $scope.email,
-            info: JSON.stringify({
+            info: angular.toJson({
                 name: $scope.name
             })
         }
@@ -44,7 +44,7 @@ app.controller('ClientEditController', function ($scope, $http, $routeParams, $l
     $scope.editClient = function () {
         var data = {
             email: $scope.email,
-            info: JSON.stringify({
+            info: angular.toJson({
                 name: $scope.name
             })
         }
