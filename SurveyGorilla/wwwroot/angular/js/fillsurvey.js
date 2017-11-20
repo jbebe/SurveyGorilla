@@ -12,12 +12,10 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
     }
 
     FillSurveyService.list($scope.token,$http, function (response) {
-        $scope.questions = response.data;
-        for (var i = 0; i < $scope.questions.length; i++) {
-            $scope.questions[i].info = JSON.parse($scope.questions[i].info);
-        }
+        $scope.survey = response.data;
+        
     }, function (response) {
-
+        $scope.questions = [{ "question": "1+1?" }, { "question": "2+2?" }];
     });
 });
 

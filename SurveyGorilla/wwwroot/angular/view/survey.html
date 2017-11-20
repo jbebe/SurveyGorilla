@@ -19,6 +19,7 @@
             <th>Created</th>
             <th>Questions</th>
             <th>Clients</th>
+            <th>Answers</th>
             <th></th>
         </tr>
         <tr ng-repeat="survey in surveys">          
@@ -26,6 +27,7 @@
             <td>{{ survey.info.created || "Now" }}</td>
             <td><a class="btn btn-success" href="#!/survey/{{survey.id}}"><b>?</b></a></td>
             <td><button class="btn btn-success glyphicon glyphicon-user" ng-click="clientEditOpen(survey.id,survey.name)" ></button></td>
+            <td><button class="btn btn-success " ng-click="surveyResults(survey)"><img class="stats" src="img/stats.png"/></button></td>
             <td><button class="btn btn-danger" ng-click="deleteSurvey(survey.id)">Delete</button></td>
         </tr>
     </table>

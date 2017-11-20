@@ -1,0 +1,21 @@
+﻿<div class="sitecontainer">
+    <h1>{{SurveyName}} - Results</h1>
+    <hr/>
+    <h4>Stats</h4>
+    <table class="table table-hover">
+        <tr>
+            <th>All</th>
+            <th>Good</th>
+            <th>Bad</th>
+            <th>Stat</th>
+            <th>Answers</th>
+        </tr>
+        <tr ng-repeat="(index, result) in results">
+            <td>{{result.count}}</td>
+            <td>{{quest.correct}}</td>
+            <td>{{quest.incorrect}}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>

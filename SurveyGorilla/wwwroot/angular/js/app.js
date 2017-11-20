@@ -32,6 +32,9 @@ app.config(function ($routeProvider) {
         }).when('/questions/:token', {
             templateUrl: 'view/fillsurvey.html',
             controller: 'FillSurveyController'
+        }).when('/survey/:surveyid/results', {
+            templateUrl: 'view/surveyresults.html',
+            controller: 'SurveyResultsController'
         }).otherwise({ redirectTo: '/home' });
 });
 

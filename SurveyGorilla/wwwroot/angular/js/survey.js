@@ -27,6 +27,11 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
         $location.path("/survey/"+surveyid+"/client");
     }
 
+    $scope.surveyResults = function (survey) {
+        window.survey = survey;
+        $location.path("/survey/" + survey.id + "/results");
+    }
+
     SurveyService.list($http, function (response) {
         $scope.surveys = response.data;
         for (var i = 0; i < $scope.surveys.length; i++) {
