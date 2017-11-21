@@ -52,8 +52,10 @@ namespace SurveyGorilla.Logic
                 })
                 .ToList();
             var subjects = survey.Clients.Select(c => 
-                $"Incoming survey from {c.Survey.Admin.Info.ToObject().Value<string>("name")} @surveygorilla.com").ToList();
-            var link = $"{_Request.Scheme }://{_Request.Host}{_Request.PathBase}/survey";
+                $"Incoming survey from " +
+                $"{c.Survey.Admin.Info.ToObject().Value<string>("name") ?? "Unnamed"}" +
+                $" @surveygorilla.com").ToList();
+            var link = $"{_Request.Scheme }://{_Request.Host}{_Request.PathBase}/#!/token";
             var htmlContent =
                 $"Survey name: -surveyName-<br>" +
                 $"Available from -surveyStart- to -surveyEnd-<br>" +
@@ -62,11 +64,11 @@ namespace SurveyGorilla.Logic
                 $"Your name: -clientName-";
             var substitutions = survey.Clients.Select(c => new Dictionary<string, string>
             {
-                { "surveyName", c.Survey.Name },
-                { "surveyStart", surveyStart.ToString() },
-                { "surveyEnd", surveyEnd.ToString() },
-                { "tokenLink", $"{link}/{c.Token}" },
-                { "clientName", c.Info.ToObject().Value<string>("name") },
+                { "-surveyName-", c.Survey.Name },
+                { "-surveyStart-", surveyStart.ToString() },
+                { "-surveyEnd-", surveyEnd.ToString() },
+                { "-tokenLink-", $"{link}/{c.Token}" },
+                { "-clientName-", c.Info.ToObject().Value<string>("name") },
             }).ToList();
             var msg = MailHelper.CreateMultipleEmailsToMultipleRecipients(from, tos, subjects, null, htmlContent, substitutions);
             var gridClient = new SendGridClient(SendGridApiKey);

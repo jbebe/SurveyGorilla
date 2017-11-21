@@ -38,7 +38,7 @@ namespace SurveyGorilla.Logic
             var adminId = session.GetInt32(Session.adminId).Value;
             var adminEntity = _context.Admins.Single(admin => admin.Id == adminId);
             session.Clear();
-            cookies.Delete(".AspNetCore.Session");
+            cookies.Delete(Session.cookieName);
             return adminEntity;
         }
     }
