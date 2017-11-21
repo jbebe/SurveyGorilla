@@ -20,7 +20,7 @@ app.config(function ($routeProvider) {
         }).when('/survey', {
             templateUrl: 'view/survey.html',
             controller: 'SurveyController'
-        }).when('/survey/:id', {
+        }).when('/survey/:surveyid', {
             templateUrl: 'view/surveyedit.html',
             controller: 'SurveyEditController'
         }).when('/survey/:surveyid/client', {
@@ -32,7 +32,7 @@ app.config(function ($routeProvider) {
         }).when('/questions/:token', {
             templateUrl: 'view/fillsurvey.html',
             controller: 'FillSurveyController'
-        }).when('/splitview/:id', {
+        }).when('/splitview/:surveyid', {
             templateUrl: 'view/splitview.html',
             controller: 'SplitViewController'
         }).when('/survey/:surveyid/results', {
@@ -67,7 +67,7 @@ app.controller('HomeController', function ($rootScope, LoginService) {
 });
 
 app.controller('SplitViewController', function ($rootScope, $routeParams) {
-    window.surveyid = $routeParams.id;
+    window.surveyid = $routeParams.surveyid;
     
 });
 

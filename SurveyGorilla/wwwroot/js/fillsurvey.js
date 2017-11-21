@@ -3,18 +3,24 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
     $scope.token = $routeParams.token;
     $scope.answers = {};
     $scope.answer = function () {
+        var info = {
+            answers: $scope.answers
+        };
+
         var data = {
-
-        }
-        //TODO GET ANSWERS
-
+            info: JSON.stringify(info)
+        };
         FillSurveyService.send($scope.token, data, $http);
     }
 
     FillSurveyService.list($scope.token,$http, function (response) {
-        $scope.survey = response.data;
-        
+        $scope.adminName = response.data.adminName;
+        $scope.surveyName = response.data.surveyName;
+        $scope.surveyStart = response.data.surveyStart;
+        $scope.surveyEnd = response.data.surveyEnd;
+        $scope.questions = response.data.questions;            
     }, function (response) {
+        $scope.surveyName = "SurveyName";
         $scope.questions = [{ "question": "1+1?" }, { "question": "2+2?" }];
     });
 });
@@ -23,7 +29,7 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
 app.factory('FillSurveyService', function () {
     return {
         send: function (token, data, $http, onSuccess, onError) {
-            $http.post("/questions/" + token, data, {})
+            $http.put("/survey/send/" + token, data, {})
                 .then(function successCallback(response) {
                     if (onSuccess) {
                         onSuccess(response);
@@ -35,7 +41,7 @@ app.factory('FillSurveyService', function () {
                 })
         },
         list: function (token, $http, onSuccess, onError) {
-            $http.get("/questions/" + token)
+            $http.get("/survey/info/" + token)
                 .then(function successCallback(response) {
                     if (onSuccess) {
                         onSuccess(response);

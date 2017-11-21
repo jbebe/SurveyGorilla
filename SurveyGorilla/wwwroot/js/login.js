@@ -38,11 +38,17 @@ app.controller('RegistrationController', function ($scope, $rootScope, $http, $l
     $scope.formSubmit = function () {
 
         function onSuccess() {
-            $scope.error = '';
-            $scope.username = '';
-            $scope.password = '';
-
-            $location.path("/survey");
+                LoginService.login({
+                    "email": $scope.email,
+                    "password": $scope.password,
+                    "info": "{}"
+                }, $http, function () {
+                    $scope.error = '';
+                    $scope.username = '';
+                    $scope.password = '';
+                    $location.path("/survey");
+                }, function () { }
+            ); 
         }
 
         function onError() {

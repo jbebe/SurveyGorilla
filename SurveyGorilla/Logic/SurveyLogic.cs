@@ -53,9 +53,14 @@ namespace SurveyGorilla.Logic
             }
             survey.AdminId = adminId;
             survey.Name = surveyData.Name;
+            /*
             var surveyInfo = new {
                 created = DateTime.UtcNow
             };
+            */
+            var surveyInfo = JObject.Parse(surveyData.Info);
+            surveyInfo["created"] = DateTime.UtcNow;
+
             survey.Info = surveyInfo.ToJson();
             _context.Surveys.Add(survey);
 

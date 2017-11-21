@@ -5,14 +5,15 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
             name: $scope.NewSurveyName,
             info: JSON.stringify({
                 availability: { 
-                    start: new Date().toJSON()
+                    start: new Date().toJSON(),
+                    end: yearlater().toJSON()
                 }
             }),            
         }
         SurveyService.create(data, $http, function (response) {
             $scope.surveys.push(data);
             response.data.info = JSON.parse(response.data.info);
-            SurveyService.addListed(response.data);
+            //SurveyService.addListed(response.data);
             
         });
     }
@@ -60,11 +61,11 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
 
 
 app.controller('SurveyEditController', function ($scope, $http, $routeParams, SurveyService) {
-    $scope.survey = SurveyService.getSurvey($routeParams.id);
-    $scope.id = $routeParams.id;
+    $scope.survey = SurveyService.getSurvey($routeParams.surveyid);
+    $scope.id = $routeParams.surveyid;
     $scope.addQuestion = function () {
         $scope.questions.push({
-            question: $scope.question
+            question: $scope.newQuestion
         });
         $scope.info.questions = $scope.questions;
         $scope.survey.info = angular.toJson($scope.info);
@@ -84,7 +85,7 @@ app.controller('SurveyEditController', function ($scope, $http, $routeParams, Su
         }
     }
 
-    SurveyService.get($routeParams.id, $http, function (response) {
+    SurveyService.get($routeParams.surveyid, $http, function (response) {
         $scope.survey = response.data;
         $scope.name = $scope.survey.name;
         $scope.info = JSON.parse($scope.survey.info);
@@ -184,3 +185,9 @@ app.factory('SurveyService', function () {
         }
     };
 });
+
+function yearlater() {
+    var date = new Date();
+    date.setDate(date.getDate() + parseInt(365));
+    return date;
+}

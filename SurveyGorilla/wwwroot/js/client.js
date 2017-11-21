@@ -1,5 +1,5 @@
-﻿app.controller('ClientController', function ($scope, $http, $routeParams, ClientService, SurveyService) {
-    $scope.survey = SurveyService.getSurvey($routeParams.id);
+﻿app.controller('ClientController', function ($scope, $http, $routeParams, ClientService, SurveyService, MailService) {
+    $scope.survey = SurveyService.getSurvey($routeParams.surveyid);
     $scope.surveyid = $routeParams.surveyid;
     $scope.newClient = function () {
         var data = {
@@ -25,6 +25,10 @@
                 }
             });
         }
+    }
+
+    $scope.sendMailAll = function (id) {
+        MailService.sendAll(id, $http);
     }
 
     ClientService.list($scope.surveyid, $http, function (response) {
@@ -126,4 +130,35 @@ app.factory('ClientService', function () {
                 })
         }
     };
+});
+
+
+app.factory('MailService', function () {
+    return {
+        sendAll: function (surveyid, $http, onSuccess, onError) {
+            $http.get("/api/mail/survey/" + surveyid)
+                .then(function successCallback(response) {
+                    if (onSuccess) {
+                        onSuccess(response);
+                    }
+                }, function errorCallback(response) {
+                    if (onError) {
+                        onError(response);
+                    }
+                })
+
+        },
+        send: function (surveyid, clientid, $http, onSuccess, onError) {
+            $http.get("/api/mail/survey" + surveyid + "/client/" + clientid)
+                .then(function successCallback(response) {
+                    if (onSuccess) {
+                        onSuccess(response);
+                    }
+                }, function errorCallback(response) {
+                    if (onError) {
+                        onError(response);
+                    }
+                })
+        }
+    }
 });

@@ -7,4 +7,5 @@ app.controller('SurveyResultsController', function ($scope, $location, $routePar
         $location.path("/survey/" + $scope.surveyid);
     }
 
+
 });

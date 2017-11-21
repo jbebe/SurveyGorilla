@@ -68,8 +68,10 @@
    width:20px;
 }
 
-.splitview{
-    display:inline-block;
-    width:49%;
-    float:left;
+@media screen and (min-width: 800px) {
+    .splitview {
+        display: inline-block;
+        width: 49%;
+        float: left;
+    }
 }

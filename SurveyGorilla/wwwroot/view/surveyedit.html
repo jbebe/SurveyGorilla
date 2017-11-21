@@ -16,12 +16,10 @@
     <table class="table table-hover">
         <tr>
             <th>Question</th>
-            <th>Answer</th>
             <th></th>
         </tr>
         <tr ng-repeat="(index, quest) in questions">
-            <td>{{quest.question}}</td>
-            <td>{{quest.answer}}</td>
+            <td>{{quest.question}}</td>           
             <td><button class="btn btn-danger" ng-click="removeQuestion(index)">Delete</button></td>
         </tr>
     </table>

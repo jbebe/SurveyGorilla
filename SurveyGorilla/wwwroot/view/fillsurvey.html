@@ -1,5 +1,5 @@
 ﻿<div class="sitecontainer">
-    <h1>{{Survey}} - Survey by {{SurveyOwner || "unknown"}}</h1>
+    <h1>{{surveyName}} - Survey by {{adminName || "unknown"}}</h1>
     <h4>Answer the Questions</h4>
     <table class="table table-hover">
         <tr>
@@ -8,7 +8,7 @@
         </tr>
         <tr ng-repeat="(key, question) in questions">
             <td>{{ question.question }}</td>
-            <td><input type="text" class="form-control" ng-model="answers[key]" placeholder="answer" required="" /></td>
+            <td><input type="text" class="form-control" ng-model="answers[question.id]" placeholder="answer" required="" /></td>
         </tr>
     </table>
     <button class="btn btn-danger" ng-click="answer()">Send Answers</button>
