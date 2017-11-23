@@ -157,16 +157,24 @@ app.controller('SurveyEditController', function ($scope, $http, $routeParams, Su
         }
     }
 
-    SurveyService.get($routeParams.surveyid, $http, function (response) {
-        $scope.survey = response.data;
-        $scope.name = $scope.survey.name;
-        $scope.info = JSON.parse($scope.survey.info);
-        $scope.survey.info = $scope.info;
+    if ($scope.survey == null) {
+        SurveyService.get($routeParams.surveyid, $http, function (response) {
+            $scope.survey = response.data;
+            $scope.name = $scope.survey.name;
+            $scope.info = JSON.parse($scope.survey.info);
+            $scope.survey.info = $scope.info;
+            $scope.created = new Date($scope.info.created).toLocaleString();
+            $scope.questions = $scope.info.questions || [];
+        }, function (response) {
+            showError("Error", "Can't load Questions");
+        });
+    } else {
+        $scope.name = $scope.survey.name;        
+        $scope.info = $scope.survey.info;
         $scope.created = new Date($scope.info.created).toLocaleString();
         $scope.questions = $scope.info.questions || [];
-    }, function (response) {
-        showError("Error", "Can't load Questions");
-    });
+    }
+    
 });
 
 

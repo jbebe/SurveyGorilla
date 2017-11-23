@@ -52,8 +52,14 @@
     }
 
     $scope.sendMailAll = function (id) {
-        MailService.sendAll(id, $http, function () {  
+        if($scope.clients.length == 0){
+            showError("E-mail has not sent", "Add Clients First!");
+            return;
+        }
+        MailService.sendAll(id, $http, function () {
+            $scope.survey = SurveyService.getSurvey($routeParams.surveyid);
             $scope.survey.info.mailall = true;
+            $scope.mailallsent = true;
             $scope.survey.info = angular.toJson($scope.survey.info);            
             SurveyService.update($scope.surveyid, $scope.survey, $http, function () {                
                 $scope.survey.info = angular.toJson($scope.survey.info);
