@@ -1,5 +1,7 @@
 ﻿app.controller('LoginController', function ($scope, $rootScope, $location, $http, LoginService) {
-
+    if (LoginService.isAuthenticated()) {
+        $location.path("/home");
+    }
     $scope.formSubmit = function () {
 
         function onSuccess() {

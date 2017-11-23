@@ -38,7 +38,7 @@ app.config(function ($routeProvider) {
         }).when('/survey/:surveyid/results', {
             templateUrl: 'view/surveyresults.html',
             controller: 'SurveyResultsController'
-        }).otherwise({ redirectTo: '/login' });
+        }).otherwise({ redirectTo: '/home' });
 });
 
 app.run(function ($rootScope, $location, $cookies, LoginService) {
