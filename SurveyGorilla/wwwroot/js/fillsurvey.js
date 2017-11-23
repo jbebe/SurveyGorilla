@@ -8,8 +8,10 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
         angular.forEach($scope.answers, function (value, key) {            
             info.answers.push({
                 id: key,
-                answer:value
+                answer: value
+                
             })
+            info.name = $scope.clientName;
         });
 
         var data = {
@@ -23,7 +25,8 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
         $scope.surveyName = response.data.surveyName;
         $scope.surveyStart = response.data.surveyStart;
         $scope.surveyEnd = response.data.surveyEnd;
-        $scope.questions = JSON.parse(response.data.questions);            
+        $scope.questions = JSON.parse(response.data.questions);
+        $scope.clientName = JSON.parse(response.data.clientInfo).name;
     }, function (response) {
         
     });

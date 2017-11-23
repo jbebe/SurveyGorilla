@@ -21,7 +21,7 @@ app.controller('SurveyResultsController', function ($scope, $http, $location, $r
                 info.answers = [];
             }
             $scope.clients.push({
-                email: response.data[i].email,
+                name: info.name,
                 answers: info.answers
             });
 
@@ -29,12 +29,12 @@ app.controller('SurveyResultsController', function ($scope, $http, $location, $r
                 var quest_res = $scope.results[value.id] || {};
                 if (quest_res[value.answer]) {
                     quest_res[value.answer].count += 1;
-                    quest_res[value.answer].users.push(response.data[i].email)
+                    quest_res[value.answer].users.push(info.name)
                 } else {
                     quest_res[value.answer] = {};
                     quest_res[value.answer].count = 1;
                     quest_res[value.answer].users = [];
-                    quest_res[value.answer].users.push(response.data[i].email);
+                    quest_res[value.answer].users.push(info.name);
                 }
                 $scope.results[value.id] = quest_res;
             });

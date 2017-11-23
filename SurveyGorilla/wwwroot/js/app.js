@@ -58,7 +58,7 @@ app.run(function ($rootScope, $location, $cookies, LoginService) {
     
     if ($cookies.get('session_id')) {
         LoginService.auth();        
-    }else if (!LoginService.isAuthenticated()) {
+    } else if (!LoginService.isAuthenticated() && $location.path().indexOf("/token") != 0) {
         $location.path("/login");
     }
 });

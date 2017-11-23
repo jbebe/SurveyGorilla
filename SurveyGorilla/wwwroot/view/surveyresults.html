@@ -15,7 +15,7 @@
                     <tr></tr>
                     <tr ng-repeat="(answer, details) in results[question.id]">
                         <td>{{answer}}</td>
-                        <td>{{details.count}}</td>
+                        <td title="{{details.users}}">{{details.count}}</td>
                     </tr>                
                 </table>
             </td>                        
