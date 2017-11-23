@@ -37,13 +37,14 @@ namespace SurveyGorilla.Controllers
         /// <remarks>
         /// You have to be logged in as admin, to access this endpoint!
         /// </remarks>
+        /// <param name="surveyId">ID of the survey that holds the clients</param>
         /// <returns>Array of client entities</returns>
         [HttpGet("{surveyId}/Client")]
-        public IActionResult GetClients()
+        public IActionResult GetClients(int surveyId)
         {
             try
             {
-                return Ok(_logic.GetAllClient(AdminId));
+                return Ok(_logic.GetAllClient(AdminId, surveyId));
             }
             catch (Exception e)
             {
