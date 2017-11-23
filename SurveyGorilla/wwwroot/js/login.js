@@ -58,7 +58,9 @@ app.controller('RegistrationController', function ($scope, $rootScope, $http, $l
         LoginService.register({
             "email": $scope.email,
             "password": $scope.password,
-            "info": "{}"
+            "info": JSON.stringify({
+                   "name":$scope.name
+            })
         }, $http, onSuccess, onError);
 
     };

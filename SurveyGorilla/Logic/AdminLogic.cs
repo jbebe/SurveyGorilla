@@ -6,6 +6,7 @@ using SurveyGorilla.Models;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using SurveyGorilla.Misc;
 
 namespace SurveyGorilla.Logic
 {
@@ -28,7 +29,14 @@ namespace SurveyGorilla.Logic
             }
             admin.Email = adminData.Email;
             admin.PasswordHash = Crypto.Sha256(adminData.Password);
-            admin.Info = JsonConvert.SerializeObject(adminInfo);
+
+            var adminI = JObject.Parse(adminData.Info);
+            adminI["registered"] = DateTime.UtcNow;
+            admin.Info = adminI.ToJson();
+
+            //admin.Info = JsonConvert.SerializeObject(adminInfo);
+
+
             _context.Add(admin);
             _context.SaveChanges();
             return admin;

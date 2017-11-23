@@ -29,7 +29,7 @@ app.config(function ($routeProvider) {
         }).when('/survey/:surveyid/client/:id', {
             templateUrl: 'view/clientedit.html',
             controller: 'ClientEditController'
-        }).when('/questions/:token', {
+        }).when('/token/:token', {
             templateUrl: 'view/fillsurvey.html',
             controller: 'FillSurveyController'
         }).when('/splitview/:surveyid', {
@@ -44,8 +44,11 @@ app.config(function ($routeProvider) {
 app.run(function ($rootScope, $location, $cookies, LoginService) {
     $rootScope.LoginService = LoginService;
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-        var notroute = ["register", "login", "logout", "home", "questions"];
+        var notroute = ["register", "login", "logout", "home", "questions","token"];
         var routepath = next.split("#!/")[1];
+        if (routepath && routepath.indexOf("/") > -1) {
+            routepath = routepath.split("/")[0];
+        }
         if (notroute.indexOf(routepath) == -1) {
             if (!LoginService.isAuthenticated() || !$cookies.get('session_id')) {
                $location.path("/login");

@@ -18,10 +18,9 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
         $scope.surveyName = response.data.surveyName;
         $scope.surveyStart = response.data.surveyStart;
         $scope.surveyEnd = response.data.surveyEnd;
-        $scope.questions = response.data.questions;            
+        $scope.questions = JSON.parse(response.data.questions);            
     }, function (response) {
-        $scope.surveyName = "SurveyName";
-        $scope.questions = [{ "question": "1+1?" }, { "question": "2+2?" }];
+        
     });
 });
 
