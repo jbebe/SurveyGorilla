@@ -4,18 +4,21 @@
     <h4>Stats</h4>
     <table class="table table-hover">
         <tr>
-            <th>All</th>
-            <th>Good</th>
-            <th>Bad</th>
-            <th>Stat</th>
+            <th>Question</th>
             <th>Answers</th>
+            <th>Count</th>
         </tr>
-        <tr ng-repeat="(index, result) in results">
-            <td>{{result.count}}</td>
-            <td>{{quest.correct}}</td>
-            <td>{{quest.incorrect}}</td>
-            <td></td>
-            <td></td>
+        <tr ng-repeat="(index, question) in survey.info.questions">
+            <td>{{question.question}}</td>
+            <td colspan="2">
+                <table class="table table-hover">
+                    <tr></tr>
+                    <tr ng-repeat="(answer, details) in results[question.id]">
+                        <td>{{answer}}</td>
+                        <td>{{details.count}}</td>
+                    </tr>                
+                </table>
+            </td>                        
         </tr>
     </table>
 </div>

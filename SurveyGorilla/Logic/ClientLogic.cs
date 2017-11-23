@@ -102,8 +102,8 @@ namespace SurveyGorilla.Logic
             var client = _context.Clients.Include(c => c.Survey).Single(c => c.Token == token);
             dynamic surveyInfoObj = client.Survey.Info.ToObject();
             dynamic availability = surveyInfoObj.availability;
-            var surveyStart = JsonConvert.DeserializeObject<DateTime>(availability.start);
-            var surveyEnd = JsonConvert.DeserializeObject<DateTime>(availability.end);
+            var surveyStart = client.Survey.Info.ToObject()["availability"]["start"].Value<DateTime>();
+            var surveyEnd = client.Survey.Info.ToObject()["availability"]["end"].Value<DateTime>();
             var currentGMT = DateTime.UtcNow;
             if (currentGMT >= surveyStart && currentGMT <= surveyEnd)
             {

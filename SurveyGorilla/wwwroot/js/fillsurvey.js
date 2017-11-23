@@ -3,9 +3,14 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
     $scope.token = $routeParams.token;
     $scope.answers = {};
     $scope.answer = function () {
-        var info = {
-            answers: $scope.answers
-        };
+        var info = {};
+        info.answers = [];
+        angular.forEach($scope.answers, function (value, key) {            
+            info.answers.push({
+                id: key,
+                answer:value
+            })
+        });
 
         var data = {
             info: JSON.stringify(info)
