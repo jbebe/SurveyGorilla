@@ -126,7 +126,8 @@ namespace SurveyGorilla.Logic
                 surveyName = client.Survey.Name,
                 surveyStart = client.Survey.Info.ToObject()["availability"].Value<string>("start"),
                 surveyEnd = client.Survey.Info.ToObject()["availability"].Value<string>("end"),
-                questions = client.Survey.Info.ToObject()["questions"].ToString(Formatting.None)
+                questions = client.Survey.Info.ToObject()["questions"].ToString(Formatting.None),
+                clientInfo = client.Info
             };
         }
     }
