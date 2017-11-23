@@ -19,9 +19,11 @@ namespace SurveyGorilla.Logic
             _context = context;
         }
 
-        public IEnumerable<ClientEntity> GetAllClient(int adminId)
+        public IEnumerable<ClientEntity> GetAllClient(int adminId, int surveyId)
         {
-            return _context.Clients.Where(client => client.Survey.AdminId == adminId);
+            return _context.Clients
+                .Include(s => s.Survey)
+                .Where(client => client.Survey.AdminId == adminId && client.SurveyId == surveyId);
         }
 
         public ClientEntity GetClient(int adminId, int surveyId, int clientId)
