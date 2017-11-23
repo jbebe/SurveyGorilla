@@ -20,7 +20,10 @@
         <tr>
             <th>Email</th>
             <th>Name</th>
-            <th colspan="2"><button class="btn btn-warning" ng-click="sendMailAll(survey.id)">Send Mail To All</button></th>
+            <th colspan="2">
+                <button ng-if="mailallsent" disabled class="btn btn-warning" ng-click="sendMailAll(survey.id)">Already sent</button>
+                <button ng-if="!mailallsent" class="btn btn-warning" ng-click="sendMailAll(survey.id)">Send Mail To All</button>
+            </th>
         </tr>
         <tr ng-repeat="client in clients">
             <td>{{ client.email }}</td>

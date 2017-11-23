@@ -7,7 +7,11 @@
             <td>
                 <input type="text" class="form-control" ng-model="newQuestion" placeholder="question" required="" />
             </td>
-        <td>
+            <td>
+                <select class="form-control" ng-model="newQuestType" ng-options="x as x.name for x in QuestTypes">                    
+               </select>
+            </td>
+            <td>
                 <button class="btn btn-success" ng-click="addQuestion()">Add</button>
             </td>
         </tr>
@@ -19,7 +23,20 @@
             <th></th>
         </tr>
         <tr ng-repeat="(index, quest) in questions">
-            <td>{{quest.question}}</td>           
+            <td ng-if="quest.type == 'text' || (!quest.type)">{{quest.question}}</td>
+            <td ng-if="quest.type == 'mc'">
+                <p>{{quest.question}}</p>
+                <table class="table table-hover">
+                    <tr ng-repeat="(i, option) in quest.options">
+                        <td><input type="text" ng-model="option"/></td>
+                        <td><button class="btn btn-warning" ng-click="removeOption(quest.id,i)">Delete Option</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="add new option" ng-model="newoptions[quest.id]" /></td>
+                        <td><button class="btn btn-warning" ng-click="addOption(quest.id)">Add</button></td>
+                    </tr>
+                </table>
+            </td>
             <td><button class="btn btn-danger" ng-click="removeQuestion(index)">Delete</button></td>
         </tr>
     </table>

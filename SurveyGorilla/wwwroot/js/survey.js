@@ -19,6 +19,8 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
             $scope.surveys.push(data);
             //SurveyService.addListed(response.data);
             
+        }, function () {
+            showError("Error", "Can't create Survey");
         });
     }
     $scope.deleteSurvey = function (id) {
@@ -30,6 +32,8 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
                         break;
                     }
                 }
+            }, function () {
+                showError("Error", "Can't delete Survey");
             });
         }
     }
@@ -56,8 +60,8 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
             $scope.surveys[i].info.created = new Date($scope.surveys[i].info.created).toLocaleString()
         }
         SurveyService.setListed($scope.surveys);
-    }, function (response) {
-
+    }, function () {
+        showError("Error", "Can't load Surveys");
     });
 
 
@@ -67,15 +71,36 @@ app.controller('SurveyController', function ($scope, $http, $location, SurveySer
 app.controller('SurveyEditController', function ($scope, $http, $routeParams, SurveyService) {
     $scope.survey = SurveyService.getSurvey($routeParams.surveyid);
     $scope.id = $routeParams.surveyid;
+    $scope.newoptions = {};
+    $scope.QuestTypes = [
+        {
+            'name': 'Simple',
+            'value': 'text'
+        },
+        {
+            'name': 'Multiple Choice',
+            'value': 'mc'
+        }
+    ];
+    $scope.newQuestType = $scope.QuestTypes[0];
+
     $scope.addQuestion = function () {
         
         $scope.questions.push({
             question: $scope.newQuestion,
-            id: MD5($scope.newQuestion+"")
+            id: MD5($scope.newQuestion + ""),
+            type: $scope.newQuestType.value,
+            options:[]
         });
         $scope.info.questions = $scope.questions;
         $scope.survey.info = angular.toJson($scope.info);
-        SurveyService.update($scope.id,$scope.survey, $http);
+        SurveyService.update($scope.id, $scope.survey, $http, function (response) {
+            $scope.survey.info = JSON.parse(response.data.info);
+        },
+        function () {
+            $scope.questions.push(deleted);
+            showError("Error", "Can't update Survey");
+        });
     }
 
     $scope.removeQuestion = function (id) {
@@ -87,7 +112,48 @@ app.controller('SurveyEditController', function ($scope, $http, $routeParams, Su
 
             }, function () {
                 $scope.questions.push(deleted);
+                showError("Error", "Can't delete Question");
             });
+        }
+    }
+
+    $scope.addOption = function (questId) {
+        var option = $scope.newoptions[questId];
+        var question = searchQuestById(questId, $scope.survey);
+        if (question) {
+            if (question.options.indexOf($scope.newoptions[questId]) > -1) {
+                showError("Error", "Can't Add identical Option");
+                return;
+            }
+            question.options.push($scope.newoptions[questId]);
+            $scope.survey.info = angular.toJson($scope.survey.info);
+            SurveyService.update($scope.id, $scope.survey, $http, function (response) {
+                $scope.survey.info = JSON.parse(response.data.info);
+                $scope.newoptions[questId] = "";
+                $scope.info = $scope.survey.info;
+                $scope.questions = $scope.survey.info.questions || [];
+            }, function () {               
+                showError("Error", "Can't Add Option");
+            });
+        } else {
+            showError("Something went wrong",":(")
+        }
+        
+    }
+
+    $scope.removeOption = function (questId, optionIndex) {
+        var question = searchQuestById(questId, $scope.survey)
+        if (question && question.options.length > optionIndex) {
+            question.options.splice(optionIndex, 1);
+            $scope.survey.info = angular.toJson($scope.survey.info);
+            SurveyService.update($scope.id, $scope.survey, $http, function (response) {
+                $scope.survey.info = JSON.parse(response.data.info);
+            }, function (response) {                
+                showError("Error", "Can't Remove Option");
+                
+            });
+        } else {
+            showError("Something went wrong", ":(")
         }
     }
 
@@ -95,14 +161,23 @@ app.controller('SurveyEditController', function ($scope, $http, $routeParams, Su
         $scope.survey = response.data;
         $scope.name = $scope.survey.name;
         $scope.info = JSON.parse($scope.survey.info);
+        $scope.survey.info = $scope.info;
         $scope.created = new Date($scope.info.created).toLocaleString();
         $scope.questions = $scope.info.questions || [];
     }, function (response) {
-
+        showError("Error", "Can't load Questions");
     });
 });
 
 
+function searchQuestById(id,survey) {
+    for (var i = 0; i < survey.info.questions.length;i++){
+        if (survey.info.questions[i].id == id) {
+            return survey.info.questions[i];
+        }
+    }
+    return null;
+}
 
 app.factory('SurveyService', function () {
     var selected = null;

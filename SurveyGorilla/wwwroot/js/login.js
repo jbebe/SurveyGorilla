@@ -10,8 +10,8 @@
             $location.path("/survey");
         }
 
-        function onError() {
-            $scope.error = "Invalid Login Parameters!";
+        function onError() {           
+            showError("Login Error", "Invalid Login Parameters!");
         }
 
         LoginService.login({
@@ -47,12 +47,15 @@ app.controller('RegistrationController', function ($scope, $rootScope, $http, $l
                     $scope.username = '';
                     $scope.password = '';
                     $location.path("/survey");
-                }, function () { }
+                    showinfo("Succesfull Registration", "Thank You for your reg!<br/>Enjoy your time with SurveyGorilla!");
+                }, function () {
+                    showError("Reg Error", "Registration Failed");
+                }
             ); 
         }
 
         function onError() {
-            $scope.error = "Cannot Register!";
+            showError("Reg Error", "Registration Failed");
         }
 
         LoginService.register({
@@ -117,6 +120,24 @@ app.factory('LoginService', function () {
         },
         auth: function () {
             isAuthenticated = true;
+        },
+        needLogin: function (url) {
+            var skiplogin = ["register", "login", "logout", "home", "questions", "token"];
+            var routepath = "";
+            if (url.indexOf("#!/") > -1) {
+                routepath = url.split("#!/")[1];    
+            } else {
+                if (url[0] == "/") {
+                    routepath = url.substring(1, url.length - 1);
+                } else {
+                    routepath = url;
+                }
+            }
+            
+            if (routepath && routepath.indexOf("/") > -1) {
+                routepath = routepath.split("/")[0];
+            }
+            return skiplogin.indexOf(routepath) == -1;
         }
     };
 });
@@ -134,7 +155,6 @@ function register(data, $http, onSuccess, onError) {
 
 
 function login(data, $http, onSuccess, onError) {
-
     $http.post("/login", data, {})
         .then(function successCallback(response) {
             onSuccess(response);

@@ -17,7 +17,11 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
         var data = {
             info: JSON.stringify(info)
         };
-        FillSurveyService.send($scope.token, data, $http);
+        FillSurveyService.send($scope.token, data, $http, function () {
+            showInfo("Successfully Saved","Thank You for your answers!")
+        }, function () {
+            showError("Error", "Can't save survey results")
+        });
     }
 
     FillSurveyService.list($scope.token,$http, function (response) {
@@ -27,8 +31,8 @@ app.controller('FillSurveyController', function ($scope, $http, $routeParams, Fi
         $scope.surveyEnd = response.data.surveyEnd;
         $scope.questions = JSON.parse(response.data.questions);
         $scope.clientName = JSON.parse(response.data.clientInfo).name;
-    }, function (response) {
-        
+    },function () {
+            showError("Error", "Can't load survey questions")
     });
 });
 

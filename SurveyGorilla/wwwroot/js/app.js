@@ -44,12 +44,8 @@ app.config(function ($routeProvider) {
 app.run(function ($rootScope, $location, $cookies, LoginService) {
     $rootScope.LoginService = LoginService;
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-        var notroute = ["register", "login", "logout", "home", "questions","token"];
-        var routepath = next.split("#!/")[1];
-        if (routepath && routepath.indexOf("/") > -1) {
-            routepath = routepath.split("/")[0];
-        }
-        if (notroute.indexOf(routepath) == -1) {
+
+        if (LoginService.needLogin(next)) {
             if (!LoginService.isAuthenticated() || !$cookies.get('session_id')) {
                $location.path("/login");
             } 
@@ -58,7 +54,7 @@ app.run(function ($rootScope, $location, $cookies, LoginService) {
     
     if ($cookies.get('session_id')) {
         LoginService.auth();        
-    } else if (!LoginService.isAuthenticated() && $location.path().indexOf("/token") != 0) {
+    } else if (!LoginService.isAuthenticated() && LoginService.needLogin($location.path())) {
         $location.path("/login");
     }
 });

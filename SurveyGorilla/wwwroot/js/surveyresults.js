@@ -5,6 +5,8 @@ app.controller('SurveyResultsController', function ($scope, $http, $location, $r
         SurveyService.get($routeParams.surveyid, $http, function (response) {
             $scope.survey = response.data;
             $scope.survey.info = JSON.parse($scope.survey.info);
+        }, function (response) {
+            showError("Error", "Can't load Survey");
         })
     }
     $scope.surveyid = $routeParams.surveyid;
@@ -42,7 +44,7 @@ app.controller('SurveyResultsController', function ($scope, $http, $location, $r
         }
 
     }, function (response) {
-
-        });
+        showError("Error", "Can't load Answers");
+    });
     
 });

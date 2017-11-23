@@ -6,7 +6,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
     <script src= "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>   
-   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/styles.css" />
 
@@ -17,11 +19,12 @@
     <script src="js/admin.js"></script>
     <script src="js/fillsurvey.js"></script>
     <script src="js/surveyresults.js"></script>
-    
+    <script src="js/modal.js"></script>
+
 
 </head>
 <body>
-    <div  id="maindiv" ng-app="myApp">
+    <div id="maindiv" ng-app="myApp">
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -29,8 +32,8 @@
                     <a class="navbar-brand" href="#">SurveyGorilla</a>
                 </div>
                 <ul class="nav navbar-nav">
-                     <li><a href="#!/survey">My Surveys</a></li>
-                    
+                    <li><a href="#!/survey">My Surveys</a></li>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="!LoginService.isAuthenticated()"><a href="#!/login"><span class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
@@ -38,6 +41,43 @@
                 </ul>
             </div>
         </nav>
+
+        <!-- Modal -->
+        <div class="modal fade" id="infoModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="infoTitle">r</h4>
+                    </div>
+                    <div class="modal-body alert alert-success">
+                        <strong id="infoText"></strong>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="errorModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="errorTitle">r</h4>
+                    </div>
+                    <div class="modal-body alert alert-danger">
+                        <strong id="errorText"></strong>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
         <div class="ng-main-view" ng-view></div> 
     </div>
 </body>

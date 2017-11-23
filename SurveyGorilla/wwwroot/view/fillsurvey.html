@@ -6,9 +6,15 @@
             <th>Question</th>
             <th>Answer</th>
         </tr>
-        <tr ng-repeat="(key, question) in questions">
-            <td>{{ question.question }}</td>
-            <td><input type="text" class="form-control" ng-model="answers[question.id]" placeholder="answer" required="" /></td>
+        <tr ng-repeat="(index, quest) in questions">
+            <td ng-if="quest.type == 'text' || (!quest.type)">{{quest.question}}</td>
+            <td ng-if="quest.type == 'text' || (!quest.type)">
+                <input type="text" class="form-control" ng-model="answers[quest.id]" placeholder="answer" required="" />
+            </td>
+            <td ng-if="quest.type == 'mc'">{{quest.question}}</td>
+            <td ng-if="quest.type == 'mc'">
+                <select class="form-control" ng-model="answers[quest.id]" ng-options="x as x for x in quest.options"></select>
+            </td>
         </tr>
     </table>
     <button class="btn btn-danger" ng-click="answer()">Send Answers</button>
