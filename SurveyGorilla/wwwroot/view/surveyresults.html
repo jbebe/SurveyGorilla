@@ -1,24 +1,47 @@
 ﻿<div class="sitecontainer">
     <h1>{{survey.name}} - Results</h1>
+    <label style="float:right;">Charts</label>
     <hr/>
-    <h4>Stats</h4>
+    
+    <div>       
+        <h4 style="display:inline-block">Stats</h4>        
+        <label style="float:right;" class="switch">
+            
+            <input ng-model="chart" type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    
     <table class="table table-hover">
         <tr>
             <th>Question</th>
-            <th>Answers</th>
-            <th>Count</th>
+            
+            <th style="text-align: center;">Details</th>
+            <th>Total Count</th>
         </tr>
         <tr ng-repeat="(index, question) in survey.info.questions">
             <td>{{question.question}}</td>
-            <td colspan="2">
+            
+            <td>
                 <table class="table table-hover">
-                    <tr></tr>
-                    <tr ng-repeat="(answer, details) in results[question.id]">
-                        <td>{{answer}}</td>
-                        <td title="{{details.users}}">{{details.count}}</td>
-                    </tr>                
+                    <tr ng-if="!chart">
+                        <th >Answer</th>
+                        <th>Count</th>
+                    </tr>
+                    <tr ng-if="!chart" ng-repeat="(answer, details) in results[question.id]">
+                        <td ng-if="answer != 'sum'">{{answer}}</td>
+                        <td ng-if="answer != 'sum'" title="{{details.users}}">{{details.count}}</td>
+                    </tr>
+                    <tr ng-if="chart">                        
+                        <td>
+                            <canvas ng-attr-id="{{ 'chart_' + index }}" ng-init="renderChart(index)"  height="300"></canvas>
+                        </td>
+                        
+                    </tr>
                 </table>
-            </td>                        
+            </td>
+            <td>{{results[question.id].sum}}</td>
         </tr>
     </table>
 </div>
+
