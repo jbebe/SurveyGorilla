@@ -19,6 +19,8 @@ namespace SurveyGorilla
 {
     public class Startup
     {
+        private bool isDeveloperMode = false;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -28,6 +30,7 @@ namespace SurveyGorilla
                 .AddJsonFile("appsettings.Development.json", optional: true);
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            isDeveloperMode = env.EnvironmentName == "Development";
 
             MailLogic.SendGridApiKey = Configuration["SendGridApiKey"];
         }
@@ -67,8 +70,15 @@ namespace SurveyGorilla
             });
 
             // Initialize Entity Framework
-            services.AddDbContext<SurveyContext>(options =>
+            if (isDeveloperMode)
+            {
+                services.AddDbContext<SurveyContext>(options =>
+                options.UseInMemoryDatabase("survey-gorilla"));
+            } else
+            {
+                services.AddDbContext<SurveyContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("SurveyGorillaDB")));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

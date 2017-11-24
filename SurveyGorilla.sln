@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurveyGorilla", "SurveyGorilla\SurveyGorilla.csproj", "{23DCCCB1-7E0A-4583-AC78-40C8614F4472}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SurveyGorilla", "SurveyGorilla\SurveyGorilla.csproj", "{23DCCCB1-7E0A-4583-AC78-40C8614F4472}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{862B4D81-765C-4A30-AAD2-61E91E919468}"
+	ProjectSection(ProjectDependencies) = postProject
+		{23DCCCB1-7E0A-4583-AC78-40C8614F4472} = {23DCCCB1-7E0A-4583-AC78-40C8614F4472}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{23DCCCB1-7E0A-4583-AC78-40C8614F4472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23DCCCB1-7E0A-4583-AC78-40C8614F4472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23DCCCB1-7E0A-4583-AC78-40C8614F4472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{862B4D81-765C-4A30-AAD2-61E91E919468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{862B4D81-765C-4A30-AAD2-61E91E919468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{862B4D81-765C-4A30-AAD2-61E91E919468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{862B4D81-765C-4A30-AAD2-61E91E919468}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
