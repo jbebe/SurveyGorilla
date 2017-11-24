@@ -22,9 +22,9 @@
             <th>Answers</th>
             <th></th>
         </tr>
-        <tr ng-repeat="survey in surveys" ng-click="splitView(survey)" style="cursor:pointer;">          
-            <td>{{ survey.name }}</td>
-            <td>{{ survey.info.created || "Now" }}</td>
+        <tr ng-repeat="survey in surveys"  >          
+            <td style="cursor:pointer;" ng-click="splitView(survey)">{{ survey.name }}</td>
+            <td style="cursor:pointer;" ng-click="splitView(survey)">{{ survey.info.created || "Now" }}</td>
             <td><a class="btn btn-success" href="#!/survey/{{survey.id}}"><b>?</b></a></td>
             <td><button class="btn btn-success glyphicon glyphicon-user" ng-click="clientEditOpen(survey)" ></button></td>
             <td><button class="btn btn-success " ng-click="surveyResults(survey)"><img class="stats" src="img/stats.png"/></button></td>
