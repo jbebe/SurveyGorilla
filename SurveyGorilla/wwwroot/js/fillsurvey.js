@@ -1,5 +1,6 @@
 ﻿
 app.controller('FillSurveyController', function ($scope, $http, $location, $routeParams, FillSurveyService) {
+    
     $scope.token = $routeParams.token;
     $scope.answers = {};
     $scope.answer = function () {
@@ -19,6 +20,7 @@ app.controller('FillSurveyController', function ($scope, $http, $location, $rout
         };
         FillSurveyService.send($scope.token, data, $http, function () {
             showInfo("Successfully Saved", "Thank You for your answers!");
+            
             $location.path("/home");
         }, function () {
             showError("Error", "Can't save survey results")

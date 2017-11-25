@@ -8,8 +8,7 @@ app.controller('SurveyResultsController', function ($scope, $http, $location, $r
            
         }, function (response) {
             showError("Error", "Can't load Survey");
-        })
-        
+        })        
     } else {
        
     }
@@ -55,10 +54,7 @@ app.controller('SurveyResultsController', function ($scope, $http, $location, $r
                 }
                 quest_res.sum++;
                 $scope.results[value.id] = quest_res;
-            });
-
-           
-            
+            });         
         }
 
     }, function (response) {
