@@ -30,7 +30,7 @@ namespace SurveyGorilla
                 .AddJsonFile("appsettings.Development.json", optional: true);
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-            isDeveloperMode = env.EnvironmentName == "Development";
+            isDeveloperMode = env.EnvironmentName == "Testing";
 
             MailLogic.SendGridApiKey = Configuration["SendGridApiKey"];
         }
